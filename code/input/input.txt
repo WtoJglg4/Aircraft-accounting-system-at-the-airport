@@ -27,7 +27,7 @@ short
 Dep
 SVO, Moscow
 LHR, London
-10:25 1701069900
+1701069900
 -
 XXX123
 Boeing 747
