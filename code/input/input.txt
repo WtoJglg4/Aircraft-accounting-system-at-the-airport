@@ -1,0 +1,272 @@
+11
+
+Dep
+Dubai
+Bangkok
+1701062100
+-
+ZZZ789
+Airbus A320
+medium
+150
+180
+400
+
+Dep
+CDG, Paris
+FRA, Frankfurt
+1701067200
+-
+GHI234
+Airbus A319
+short
+100
+120
+250
+
+Dep
+SVO, Moscow
+LHR, London
+10:25 1701069900
+-
+XXX123
+Boeing 747
+long
+200
+250
+500
+
+Arr
+CDG, Paris
+FRA, Frankfurt
+1701067200
+1701072000
+GHI234
+Airbus A319
+short
+100
+120
+250
+
+Dep
+ATL, Atlanta
+ORD, Chicago
+1701073200
+-
+JKL567
+Boeing 737
+medium
+180
+200
+350
+
+Dep
+NRT, Tokyo
+ICN, Seoul
+1701078900
+-
+DEF789
+Boeing 777
+short
+120
+150
+300
+
+Arr
+ATL, Atlanta
+ORD, Chicago
+1701073200
+1701080400
+JKL567
+Boeing 737
+medium
+180
+200
+350
+
+Arr
+DXB, Dubai
+BKK, Bangkok
+1701062100
+1701084000
+ZZZ789
+Airbus A320
+medium
+150
+180
+400
+
+Arr
+SVO, Moscow
+LHR, London
+1701069900
+1701084300
+XXX123
+Boeing 747
+long
+200
+250
+500
+
+Dep
+JFK, New York
+CDG, Paris
+1701085500
+-
+YYY456
+Airbus A380
+long
+280
+300
+700
+
+Dep
+LAX, Los Angeles
+SYD, Sydney
+1701091800
+-
+ABC456
+Boeing 787
+long
+280
+300
+900
+
+//////////////////
+Dep
+Dep:Dubai
+Arr:Bangkok
+DepTime:1701062100
+ArrTime: -
+Flight number: ZZZ789
+Plane brand: Airbus A320
+Distance: medium
+Passengers: 180
+Tickets: 150
+Ticket price: $400
+
+Dep
+Dep: CDG, Paris
+Arr: FRA, Frankfurt
+Dep time: 09:40 1701067200
+Arr time: -
+Flight number: GHI234
+Plane brand: Airbus A319
+Distance: short
+Passengers: 120
+Tickets: 100
+Ticket price: $250
+
+Dep
+Dep: SVO, Moscow
+Arr: LHR, London
+Dep time: 10:25 1701069900
+Arr time: -
+Flight number: XXX123
+Plane brand: Boeing 747
+Distance: long
+Passengers: 250
+Tickets: 200
+Ticket price: $500
+
+Arr
+Dep: CDG, Paris
+Arr: FRA, Frankfurt
+Dep time: 09:40 1701067200
+Arr time: 11:00 1701072000
+Flight number: GHI234
+Plane brand: Airbus A319
+Distance: short
+Passengers: 120
+Tickets: 100
+Ticket price: $250
+
+Dep
+Dep: ATL, Atlanta
+Arr: ORD, Chicago
+Dep time: 11:20 1701073200
+Arr time: -
+Flight number: JKL567
+Plane brand: Boeing 737
+Distance: medium
+Passengers: 200
+Tickets: 180
+Ticket price: $350
+
+Dep
+Dep: NRT, Tokyo
+Arr: ICN, Seoul
+Dep time: 12:55 1701078900
+Arr time: -
+Flight number: DEF789
+Plane brand: Boeing 777
+Distance: short
+Passengers: 150
+Tickets: 120
+Ticket price: $300
+
+Arr
+Dep: ATL, Atlanta
+Arr: ORD, Chicago
+Dep time: 11:20 1701073200
+Arr time: 13:20 1701080400
+Flight number: JKL567
+Plane brand: Boeing 737
+Distance: medium
+Passengers: 200
+Tickets: 180
+Ticket price: $350
+
+Arr
+Dep: DXB, Dubai
+Arr: BKK, Bangkok
+Dep time: 08:15 1701062100
+Arr time: 14:20 1701084000
+Flight number: ZZZ789
+Plane brand: Airbus A320
+Distance: medium
+Passengers: 180
+Tickets: 150
+Ticket price: $400
+
+Arr
+Dep: SVO, Moscow
+Arr: LHR, London
+Dep time: 10:25 1701069900
+Arr time: 14:25 1701084300
+Flight number: XXX123
+Plane brand: Boeing 747
+Distance: long
+Passengers: 250
+Tickets: 200
+Ticket price: $500
+
+Dep
+Dep: JFK, New York
+Arr: CDG, Paris
+Dep time: 14:45 1701085500
+Arr time: -
+Flight number: YYY456
+Plane brand: Airbus A380
+Distance: long
+Passengers: 300
+Tickets: 280
+Ticket price: $700
+
+Dep
+Dep: LAX, Los Angeles
+Arr: SYD, Sydney
+Dep time: 16:30 1701091800
+Arr time: -
+Flight number: ABC456
+Plane brand: Boeing 787
+Distance: long
+Passengers: 300
+Tickets: 280
+Ticket price: $900
+
+
+
+
+
+
