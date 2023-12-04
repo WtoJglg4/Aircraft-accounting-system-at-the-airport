@@ -1,8 +1,8 @@
 11
 
 Dep
-Dubai
-Bangkok
+DXB, Dubai
+BKK, Bangkok
 1701062100
 -
 ZZZ789

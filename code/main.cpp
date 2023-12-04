@@ -42,7 +42,11 @@ class list{
         bool empty();
         int len();
         event* getEventFromConsole();
-        void find(event* Event);
+        void select(event* Event);
+        void remove(event* Event);
+        bool satisfyPatternEvent(event* pattern, event* event);
+        void moveForward(int eventId, int steps);
+        void moveBack(int eventId, int steps);
 
         void printEvent(event* Event);
 
@@ -219,9 +223,25 @@ event* list::getEventFromConsole(){
     return newEvent;
 }
 
-void list::find(event* Event){
+bool list::satisfyPatternEvent(event* pattern, event* event){
+    bool equals = true;
+        if(pattern->type != -1 && pattern->type != event->type) equals = false;
+        if(pattern->depAirport.compare("-") && pattern->depAirport.compare(event->depAirport)) equals = false;
+        if(pattern->arrAirport.compare("-") && pattern->arrAirport.compare(event->arrAirport)) equals = false;
+        if(pattern->depTime != -1 && pattern->depTime != event->depTime) equals = false;
+        if(pattern->arrTime != -1 && pattern->arrTime != event->arrTime) equals = false;
+        if(pattern->flightNumber.compare("-") && pattern->flightNumber.compare(event->flightNumber)) equals = false;
+        if(pattern->planeBrand.compare("-") && pattern->planeBrand.compare(event->planeBrand)) equals = false;
+        if(pattern->distance.compare("-") && pattern->distance.compare(event->distance)) equals = false;
+        if(pattern->onBoard != -1 && pattern->onBoard != event->onBoard) equals = false;
+        if(pattern->sold != -1 && pattern->sold != event->sold) equals = false;
+        if(pattern->ticketPrice != -1 && pattern->ticketPrice != event->ticketPrice) equals = false;
+    return equals;
+}
+
+void list::select(event* Event){
     if(empty()){
-        cout << "Событий не найдено\n";
+        cout << "Список пуст\n";
         return;
     }
 
@@ -229,20 +249,7 @@ void list::find(event* Event){
     event* curr = head;
     cout << "Найденные события:\n";
     do{
-        bool equals = true;
-        if(Event->type != -1 && Event->type != curr->type) equals = false;
-        if(Event->depAirport.compare("-") && Event->depAirport.compare(curr->depAirport)) equals = false;
-        if(Event->arrAirport.compare("-") && Event->arrAirport.compare(curr->arrAirport)) equals = false;
-        if(Event->depTime != -1 && Event->depTime != curr->depTime) equals = false;
-        if(Event->arrTime != -1 && Event->arrTime != curr->arrTime) equals = false;
-        if(Event->flightNumber.compare("-") && Event->flightNumber.compare(curr->flightNumber)) equals = false;
-        if(Event->planeBrand.compare("-") && Event->planeBrand.compare(curr->planeBrand)) equals = false;
-        if(Event->distance.compare("-") && Event->distance.compare(curr->distance)) equals = false;
-        if(Event->onBoard != -1 && Event->onBoard != curr->onBoard) equals = false;
-        if(Event->sold != -1 && Event->sold != curr->sold) equals = false;
-        if(Event->ticketPrice != -1 && Event->ticketPrice != curr->ticketPrice) equals = false;
-
-        if(equals) {
+        if(satisfyPatternEvent(Event, curr)) {
             printEvent(curr);
             equalsCount++;
         }
@@ -253,7 +260,111 @@ void list::find(event* Event){
     
     if(equalsCount == 0){
         cout << "Собыйтий не найдено\n";
-    } else cout << "Событий найдено " << equalsCount << endl;
+    } else cout << "Событий найдено: " << equalsCount << endl << endl;
+}
+
+void list::remove(event* Event){
+    if(empty()){
+        cout << "Список пуст\n";
+        return;
+    }
+
+    int equalsCount = 0;
+    event* curr = head;
+    cout << "Удалённые события:\n";
+
+    while(curr->next != head){
+        if(satisfyPatternEvent(Event, curr)){
+            printEvent(curr);
+            equalsCount++;
+
+            curr->prev->next = curr->next;
+            curr->next->prev = curr->prev;
+            if(curr == head) head = curr->next;
+            event* tmp = curr;
+            curr = curr->next;
+            delete tmp;
+            count--;
+        } else curr = curr->next;
+    }
+    if(satisfyPatternEvent(Event, curr)){
+            printEvent(curr);
+            equalsCount++;
+
+            curr->prev->next = curr->next;
+            curr->next->prev = curr->prev;
+            if(curr == head) head = curr->next;
+            event* tmp = curr;
+            curr = curr->next;
+            delete tmp;
+            count--;
+        } else curr = curr->next;
+    
+    if(equalsCount == 0){
+        cout << "Собыйтий не найдено\n";
+    } else cout << "Событий удалено: " << equalsCount << endl << endl;
+
+    curr = head;
+    int newId = 0;
+    do{
+        curr->id = newId;
+        newId++;
+        curr = curr->next;
+    }
+    while(curr != head);
+}
+
+void list::moveForward(int eventId, int steps){
+    if(eventId >= count) {
+        cout << "Элемента с таким id нет\n";
+        return;
+    }
+    event* curr = head;
+    while(curr->id != eventId) curr = curr->next;
+    event* left = curr, *right, *tmp;
+    for(int i = 0; i < steps; i++) curr = curr->next;
+    right = curr;
+
+    if(left == head) head = left->next;
+    // tmp = right;
+    
+    cout << left->id << " " << right->id << " " << tmp->id << endl;
+    // left->prev->next = tmp;
+    // right->prev = left->prev;
+    // right->next= left->next;
+    // left->next->prev = tmp;
+
+    // tmp->prev->next = left;
+    // left->prev = tmp->prev;
+    // left->next= tmp->next;
+    // tmp->next->prev = left;
+
+    tmp = left->prev;
+    left->prev->next = left->next;
+    left->next->prev = left->prev;
+
+    right->next->prev = left;
+    left->next = right->next;
+    left->prev = right;
+    right->next = left;
+
+    cout << left->prev->id << " " << left->id << " " << left->next->id << endl;
+    cout << right->prev->id << " " << right->id << " " << right->next->id << endl;
+    cout << tmp->prev->id << " " << tmp->id << " " << tmp->next->id << endl;
+
+    int newId = (tmp->id + 1)%count;
+    tmp = tmp->next;
+    do{
+        tmp->id = newId;
+        newId = (newId + 1)%count;
+        tmp = tmp->next;
+    }
+    while(tmp != left->next);
+
+}
+
+void list::moveBack(int eventId, int steps){
+    moveForward(eventId, (count - steps - 1)%count);
 }
 
 int main(){
@@ -265,11 +376,17 @@ int main(){
     list.init(path);
     // list.print();
     cout << list.empty() << " " << list.len() << endl;
+    list.print();
 
-    event* custom = list.getEventFromConsole();
-    list.printEvent(custom);
+    // event* custom = list.getEventFromConsole();
+    // list.printEvent(custom);
 
-    list.find(custom);
+    // list.select(custom);
+    // list.remove(custom);
+    // list.print();
    
-
+    list.moveForward(0, 5);
+    list.print();
+    list.moveForward(5, 5);
+    list.print();
 }
