@@ -132,6 +132,20 @@ long
 300
 900
 
+//New
+Arr
+LAX, Los Angeles
+SYD, Sydney
+1701091800
+1701099999
+ABC456
+Boeing 787
+long
+280
+300
+900
+
+
 //////////////////
 Dep
 Dep:Dubai

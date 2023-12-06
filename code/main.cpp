@@ -24,14 +24,13 @@ struct event{
     event *next, *prev;     //следующий, предыдущий элементы
 };
 
-class list{
+class list
+{
+protected:
     event *head;
     event* getEvent(ifstream& file);
-    
 
     int count;
-    
-    
 
     public:
         list();
@@ -57,7 +56,8 @@ list::list(){
     count = 0;
 }
 
-event* list::getEvent(ifstream& file){
+event* list::getEvent(ifstream& file)
+{
     string typeStr, depAirport, arrAirport, depTimeStr, arrTimeStr;          
     string flightNumber, planeBrand, distance, onBoardStr, soldStr, ticketPriceStr;
     int type, depTime, arrTime, onBoard, sold; 
@@ -130,7 +130,11 @@ void list::append(event* newEvent){
 
 //печать события
 void list::printEvent(event* curr){
-    cout << "id: " << curr->id << "\ntype: " << curr->type << "\ndepair: " << curr->depAirport << "\narrAirpot: " << curr->arrAirport << "\ndepTime: " << curr->depTime << "\narrTime: " << curr->arrTime << "\nflightNumber: ";
+    string etype;
+    if(curr->type){
+        etype = "Dep";
+    } else etype = "Arr";
+    cout << "id: " << curr->id << "\ntype: " << etype << "\ndepair: " << curr->depAirport << "\narrAirpot: " << curr->arrAirport << "\ndepTime: " << curr->depTime << "\narrTime: " << curr->arrTime << "\nflightNumber: ";
     cout << curr->flightNumber << "\nplaneBrand: " << curr->planeBrand << "\ndistance: " << curr->distance << "\nonBoard: " << curr->onBoard << "\nsold: " << curr->sold << "\nticketPrice: " << curr->ticketPrice << "\n\n";
 }
 
@@ -141,6 +145,7 @@ void list::print(){
     }
 
     event* curr = head;
+    cout << "Всего событий: " << count << endl;
     do{
         printEvent(curr);
         curr = curr->next;
@@ -167,7 +172,7 @@ event* list::getEventFromConsole(){
                                 distance, onBoard, sold, ticketPrice,
                                 nullptr, nullptr};
 
-    printf("Добавьте фильтры для события\n1. Тип события\n2. Аэропорт вылета\n3. Аэропорт прибытия\n");
+    printf("Введите поля для события\n0. ID элемента\n1. Тип события\n2. Аэропорт вылета\n3. Аэропорт прибытия\n");
     printf("4. Время вылета\n5. Время прибытия\n6. Бортовой номер\n7. Марка самолета\n8. Дистанция\n");
     printf("9. Пассажиров на борту\n10. Продано билетов\n11. Цена билета\n12. Выйти из добавления фильтра\n");
 
@@ -177,9 +182,12 @@ event* list::getEventFromConsole(){
         getline(cin, filter);
         num = atoi(filter.c_str());
         getline(cin, filter);
-        cout << num << " " << filter << endl;
+        if(num != 12) cout << num << " " << filter << endl;        
         switch (num)
         {
+        case 0:
+            newEvent->id = atoi(filter.c_str());
+            break;
         case 1: 
             if(!filter.compare("Dep")){
                 newEvent->type = 1;
@@ -192,10 +200,10 @@ event* list::getEventFromConsole(){
             newEvent->arrAirport = filter;
             break;
         case 4:
-            newEvent->depTime = atoi(depTimeStr.c_str());
+            newEvent->depTime = atoi(filter.c_str());
             break;
         case 5:
-            newEvent->arrTime = atoi(arrTimeStr.c_str());
+            newEvent->arrTime = atoi(filter.c_str());
             break;
         case 6:
             newEvent->flightNumber = filter;
@@ -207,13 +215,13 @@ event* list::getEventFromConsole(){
             newEvent->distance = filter;
             break;
         case 9:
-            newEvent->onBoard = atoi(onBoardStr.c_str());
+            newEvent->onBoard = atoi(filter.c_str());
             break;
         case 10:
-            newEvent->sold = atoi(soldStr.c_str());
+            newEvent->sold = atoi(filter.c_str());
             break;
         case 11:
-            newEvent->ticketPrice = atof(ticketPriceStr.c_str());
+            newEvent->ticketPrice = atof(filter.c_str());
             break;
         default:
             break;
@@ -225,6 +233,7 @@ event* list::getEventFromConsole(){
 
 bool list::satisfyPatternEvent(event* pattern, event* event){
     bool equals = true;
+        if(pattern->id != -1 && pattern->id != event->id) equals = false;
         if(pattern->type != -1 && pattern->type != event->type) equals = false;
         if(pattern->depAirport.compare("-") && pattern->depAirport.compare(event->depAirport)) equals = false;
         if(pattern->arrAirport.compare("-") && pattern->arrAirport.compare(event->arrAirport)) equals = false;
@@ -304,7 +313,7 @@ void list::remove(event* Event){
         cout << "Собыйтий не найдено\n";
     } else cout << "Событий удалено: " << equalsCount << endl << endl;
 
-    curr = head;
+    curr = head;//??????????????????
     int newId = 0;
     do{
         curr->id = newId;
@@ -326,18 +335,6 @@ void list::moveForward(int eventId, int steps){
     right = curr;
 
     if(left == head) head = left->next;
-    // tmp = right;
-    
-    cout << left->id << " " << right->id << " " << tmp->id << endl;
-    // left->prev->next = tmp;
-    // right->prev = left->prev;
-    // right->next= left->next;
-    // left->next->prev = tmp;
-
-    // tmp->prev->next = left;
-    // left->prev = tmp->prev;
-    // left->next= tmp->next;
-    // tmp->next->prev = left;
 
     tmp = left->prev;
     left->prev->next = left->next;
@@ -348,10 +345,6 @@ void list::moveForward(int eventId, int steps){
     left->prev = right;
     right->next = left;
 
-    cout << left->prev->id << " " << left->id << " " << left->next->id << endl;
-    cout << right->prev->id << " " << right->id << " " << right->next->id << endl;
-    cout << tmp->prev->id << " " << tmp->id << " " << tmp->next->id << endl;
-
     int newId = (tmp->id + 1)%count;
     tmp = tmp->next;
     do{
@@ -360,7 +353,6 @@ void list::moveForward(int eventId, int steps){
         tmp = tmp->next;
     }
     while(tmp != left->next);
-
 }
 
 void list::moveBack(int eventId, int steps){
@@ -369,24 +361,38 @@ void list::moveBack(int eventId, int steps){
 
 int main(){
     list list;
-    cout << list.empty() << endl;
-    list.print();
-
-
+    
+    cout << "ПЕРВИЧНАЯ ИНИЦИАЛИЗАЦИЯ:\n";
     list.init(path);
-    // list.print();
-    cout << list.empty() << " " << list.len() << endl;
     list.print();
 
-    // event* custom = list.getEventFromConsole();
-    // list.printEvent(custom);
-
-    // list.select(custom);
-    // list.remove(custom);
-    // list.print();
-   
-    list.moveForward(0, 5);
+    cout << "ДОБАВЛЕНИЕ НОВОГО ЭЛЕМЕНТА В СПИСОК:\n";
+    list.append(list.getEventFromConsole());
     list.print();
-    list.moveForward(5, 5);
+
+    cout << "ПОИСК ЭЛЕМЕНТА:\n";
+    //проверить удаление по id(селект работает)
+    event* custom = list.getEventFromConsole();
+    list.select(custom);
+    
+
+    cout << "УДАЛЕНИЕ ЭЛЕМЕНТА:\n";
+    //проверить удаление по id(селект работает)
+    list.remove(custom);
+    list.print();
+
+    cout << "ПЕРЕМЕЩЕНИЕ В ПРЯМОМ НАПРАВЛЕНИИ:\n";
+    int eventId, steps;
+    cout << "Введите индекс перемещаемого элемента: ";
+    cin >> eventId;
+    cout << "Введите кол-во шагов: ";
+    cin >> steps;
+    cout << endl;
+    list.moveForward(eventId, steps);
+    list.print();
+
+    cout << "ПЕРЕМЕЩЕНИЕ В ОБРАТНОМ НАПРАВЛЕНИИ:\n";
+    cout << "Перемещаем " << eventId << "-й элемент на " << steps << "поз. назад\n\n" ;
+    list.moveForward(eventId, steps);
     list.print();
 }
