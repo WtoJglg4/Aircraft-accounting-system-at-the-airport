@@ -1,132 +1,110 @@
 11
 
 Dep
-DXB, Dubai
-BKK, Bangkok
+0
 1701062100
--
 ZZZ789
-Airbus A320
+1
 medium
 150
 180
 400
 
 Dep
-CDG, Paris
-FRA, Frankfurt
+2
 1701067200
--
 GHI234
-Airbus A319
+0
 short
 100
 120
 250
 
 Dep
-SVO, Moscow
-LHR, London
+4
 1701069900
--
 XXX123
-Boeing 747
+4
 long
 200
 250
 500
 
 Arr
-CDG, Paris
-FRA, Frankfurt
-1701067200
+3
 1701072000
 GHI234
-Airbus A319
+0
 short
 100
 120
 250
 
 Dep
-ATL, Atlanta
-ORD, Chicago
+7
 1701073200
--
 JKL567
-Boeing 737
+3
 medium
 180
 200
 350
 
 Dep
-NRT, Tokyo
-ICN, Seoul
+9
 1701078900
--
 DEF789
-Boeing 777
+5
 short
 120
 150
 300
 
 Arr
-ATL, Atlanta
-ORD, Chicago
-1701073200
+8
 1701080400
 JKL567
-Boeing 737
+3
 medium
 180
 200
 350
 
 Arr
-DXB, Dubai
-BKK, Bangkok
-1701062100
+1
 1701084000
 ZZZ789
-Airbus A320
+1
 medium
 150
 180
 400
 
 Arr
-SVO, Moscow
-LHR, London
-1701069900
+6
 1701084300
 XXX123
-Boeing 747
+4
 long
 200
 250
 500
 
 Dep
-JFK, New York
-CDG, Paris
+11
 1701085500
--
 YYY456
-Airbus A380
+2
 long
 280
 300
 700
 
 Dep
-LAX, Los Angeles
-SYD, Sydney
+12
 1701091800
--
 ABC456
-Boeing 787
+6
 long
 280
 300
