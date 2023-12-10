@@ -15,9 +15,11 @@ struct plane{
 
 class planeList{
     protected:
-        plane *head, *tail;
+        
         int count;
     public:
+        plane *head, *tail;
+
         planeList();
         
         int length();
@@ -26,6 +28,7 @@ class planeList{
         void append(int index, string data, int capacity);
         plane* getPlane(int id);
         void init(const char *path);
+        int remove(string name);
         void print();
         // string removeById(int id);
         // int removeByData(string data);
@@ -63,7 +66,7 @@ void planeList::append(int index, string data, int capacity){
 
 void planeList::print(){
     
-    cout << "list:\n";
+    cout << "planesList:\n";
     plane* curr = head;
     do{
         cout << curr->id << " " << curr->name << " " << curr->capacity << endl;
@@ -108,6 +111,30 @@ plane* planeList::getPlane(int id){
     exit(1); 
 }
 
+int planeList::remove(string name){
+    plane *curr = head;
+    do{
+        if(!name.compare(curr->name)) break;
+        curr = curr->next;
+    }
+    while(curr != head);    //если использовать обычный while, придется после него делать еще одну итерацию
+
+    if(curr == head){
+        if(name.compare(curr->name)) return -1; //не найден
+        head = head->next;
+    }
+    if(curr == tail) tail = tail->prev;
+
+    curr->prev->next = curr->next;
+    curr->next->prev = curr->prev;
+    
+    int id = curr->id;
+    plane *tmp = curr;
+    curr = curr->next;
+    delete tmp;
+    count--;
+    return id;
+}
 
 
 struct airport{
@@ -127,8 +154,9 @@ class airportList{
         bool empty();
 
         void append(int index, string data);
-        int getId(string data);
+        int getId(string name);
         string getData(int id);
+        int remove(string name);
         void init(const char *path);
         void print();
         // string removeById(int id);
@@ -167,7 +195,7 @@ void airportList::append(int index, string data){
 
 void airportList::print(){
     
-    cout << "list:\n";
+    cout << "airportsList:\n";
     airport* curr = head;
     do{
         cout << curr->id << " " << curr->name << endl;
@@ -223,6 +251,31 @@ string airportList::getData(int id){
     exit(1); 
 }
 
+int airportList::remove(string name){
+    airport *curr = head;
+    do{
+        if(!name.compare(curr->name)) break;
+        curr = curr->next;
+    }
+    while(curr != head);    //если использовать обычный while, придется после него делать еще одну итерацию
+
+    if(curr == head){
+        if(name.compare(curr->name)) return -1; //не найден
+        head = head->next;
+    }
+    if(curr == tail) tail = tail->prev;
+
+    curr->prev->next = curr->next;
+    curr->next->prev = curr->prev;
+    
+    int id = curr->id;
+    airport *tmp = curr;
+    curr = curr->next;
+    delete tmp;
+    count--;
+    return id;
+}
+
 
 
 struct event{
@@ -244,12 +297,14 @@ class eventList
 {
     protected:
         event *head, *tail;
-        airportList airports;
-        planeList planes;
+        
         
         int count;
 
     public:
+        airportList airports;
+        planeList planes;
+
         eventList(airportList airport, planeList plane);
 
         void init(const char *path);
@@ -266,6 +321,9 @@ class eventList
         void moveBack(int eventId, int steps);
 
         void printEvent(event* Event);
+
+        void removePlane(string name);
+        void removeAirport(string name);
 
 };
 
@@ -312,10 +370,21 @@ event* eventList::getEvent(ifstream& file)
     getline(file, ticketPriceStr, '\n');
     ticketPrice = atof(ticketPriceStr.c_str());
     
+    event *newEvent = new event;
+    newEvent->id = 0;
+    newEvent->type = type;
+    newEvent->airportId = airportId;
+    newEvent->time = time;
+    newEvent->flightNumber = flightNumber;
+    newEvent->planeBrandId = planeBrandId;
+    newEvent->distance = distance;
+    newEvent->onBoard = onBoard;
+    newEvent->sold = sold;
+    newEvent->ticketPrice = ticketPrice;
+    newEvent->next = nullptr;
+    newEvent->prev = nullptr;
     
-    //event->
-
-    return new event{0, type, airportId, time, flightNumber, planeBrandId, distance, onBoard, sold, ticketPrice, nullptr, nullptr};
+    return newEvent;
 }
 
 void eventList::init(const char *path){
@@ -383,6 +452,50 @@ bool eventList::empty(){
 
 int eventList::len(){
     return count;
+}
+
+void eventList::removePlane(string name){
+    int rmId = planes.remove(name); //удалить из списка самолетов
+
+    event *curr = head;
+    do{
+        if(rmId == curr->planeBrandId){
+            if(curr == head) head = head->next;
+            if(curr == tail) tail = tail->prev; 
+
+            curr->prev->next = curr->next;
+            curr->next->prev = curr->prev;
+
+            event *tmp = curr;
+            curr = curr->next;
+            delete tmp;
+            count--;
+        }
+        curr = curr->next;
+    }
+    while(curr != head);    //если использовать обычный while, придется после него делать еще одну итерацию
+}
+
+void eventList::removeAirport(string name){
+    int rmId = airports.remove(name); //удалить из списка самолетов
+
+    event *curr = head;
+    do{
+        if(rmId == curr->airportId){
+            if(curr == head) head = head->next;
+            if(curr == tail) tail = tail->prev; 
+
+            curr->prev->next = curr->next;
+            curr->next->prev = curr->prev;
+
+            event *tmp = curr;
+            curr = curr->next;
+            delete tmp;
+            count--;
+        }
+        curr = curr->next;
+    }
+    while(curr != head);    //если использовать обычный while, придется после него делать еще одну итерацию
 }
 
 // event* eventList::getEventFromConsole(){
@@ -594,11 +707,30 @@ int main(){
     airports.print();
 
     //инициализация списка взлетов/посадок
-    eventList eventList(airports, planes);
+    eventList events(airports, planes);
+    events.planes.print();
     
     cout << "ПЕРВИЧНАЯ ИНИЦИАЛИЗАЦИЯ:\n";
-    eventList.init(eventsPath);
-    eventList.print();
+    events.init(eventsPath);
+    events.print();
+
+    events.removePlane("Airbus A320");
+    events.removeAirport("VKO, Moscow");
+    events.print();
+    events.planes.print();
+    
+    
+
+
+
+    // planes.remove("Airbus A319");
+    // planes.print();
+     
+    // planes.remove("Boeing 777");
+    // planes.print();
+
+    // planes.remove("SSJ-100");
+    // planes.print();
 
     // cout << "ДОБАВЛЕНИЕ НОВОГО ЭЛЕМЕНТА В СПИСОК:\n";
     // eventList.append(eventList.getEventFromConsole());
