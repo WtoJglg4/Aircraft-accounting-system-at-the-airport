@@ -647,7 +647,7 @@ void eventList::remove(event* Event){
 }
 
 void eventList::moveForward(int eventId, int steps){
-    if(eventId >= count) {
+    if(eventId >= count || eventId < 0) {
         cout << "Элемента с таким id нет\n";
         return;
     }
@@ -657,9 +657,11 @@ void eventList::moveForward(int eventId, int steps){
     for(int i = 0; i < steps; i++) curr = curr->next;
     right = curr;
 
-    if(left == head) head = left->next;
+    if(left == head) {
+        head = left->next;
+        tmp = left->prev;
+    } else tmp = left;
 
-    tmp = left->prev;
     left->prev->next = left->next;
     left->next->prev = left->prev;
 
@@ -668,18 +670,20 @@ void eventList::moveForward(int eventId, int steps){
     left->prev = right;
     right->next = left;
 
-    int newId = (tmp->id + 1)%count;
-    tmp = tmp->next;
+    int newId = 0;
+    curr = head;
     do{
-        tmp->id = newId;
-        newId = (newId + 1)%count;
-        tmp = tmp->next;
+        curr->id = newId;
+        newId++;
+        curr = curr->next;
     }
-    while(tmp != left->next);
+    while(curr != head);
 }
 
 void eventList::moveBack(int eventId, int steps){
-    moveForward(eventId, (count - steps - 1)%count);
+    steps = (count - steps - 1)%count; //????????????????????????
+    if(steps < 0) steps += count;
+    moveForward(eventId, steps);
 }
 
 int main(){
@@ -728,6 +732,6 @@ int main(){
 
     cout << "ПЕРЕМЕЩЕНИЕ В ОБРАТНОМ НАПРАВЛЕНИИ:\n";
     cout << "Перемещаем " << eventId << "-й элемент на " << steps << "поз. назад\n\n" ;
-    events.moveForward(eventId, steps);
+    events.moveBack(eventId, steps);
     events.print();
 }
