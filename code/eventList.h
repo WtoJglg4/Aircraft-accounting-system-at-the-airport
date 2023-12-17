@@ -10,12 +10,14 @@ using namespace std;
 const int arrival = 0, departure = 1;
 
 struct event{
-    int id;                 //индекс в списке
+    int id;                 //id индекс в списке
+    int airportId;          //id аэропорт
+    int planeBrandId;       //id марка самолета
     int type;               //тип события(вылет/прилет)
-    int airportId;          //аэропорт
+    
     int time;               //время
     string flightNumber;    //номер рейса
-    int planeBrandId;       //марка самолета
+    
     string distance;        //ближний/дальний рейс
     int onBoard;            //пассажиров на борту
     int sold;               //проданных билетов

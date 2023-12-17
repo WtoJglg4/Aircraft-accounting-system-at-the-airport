@@ -71,9 +71,9 @@ void eventList::init(const char *path){
 
     getline(file, eventsCountString);
     int eventsCount = atoi(eventsCountString.c_str());
-
+    event* newEvent ;
     for(int i = 0; i < eventsCount; i++){
-        event* newEvent = getEvent(file);
+        newEvent = getEvent(file);
         append(newEvent);
     }
 
@@ -203,6 +203,8 @@ event* eventList::getEventFromConsole(){
     do{
         getline(cin, filter);
         num = atoi(filter.c_str());
+        // cin >> num;
+        // cout <<"NUM " << num << endl;
         getline(cin, filter);
         switch (num)
         {
@@ -359,7 +361,7 @@ void eventList::moveForward(int eventId, int steps){
 }
 
 void eventList::moveBack(int eventId, int steps){
-    steps = (count - steps - 1)%count; //????????????????????????
+    steps = (count - steps - 1)%count;
     if(steps < 0) steps += count;
     moveForward(eventId, steps);
 }

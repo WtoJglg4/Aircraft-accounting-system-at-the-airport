@@ -19,13 +19,21 @@ bool airportList::empty(){
 
 
 void airportList::append(int index, string data){
+    airport* newAirport = new airport;
+    newAirport->id = index;
+    newAirport->name = data;
+    newAirport->next = nullptr;
+    newAirport->prev = nullptr;
+    
     if(!head){
-        head = new airport{index, data, nullptr, nullptr};
+        head = newAirport;
         head->prev = head;
         head->next = head;
         tail = head;
     } else{
-        tail->next = new airport{index, data, head, tail};
+        newAirport->next = head;
+        newAirport->prev = tail;
+        tail->next = newAirport;
         head->prev = tail->next;
         tail = tail->next;
     }

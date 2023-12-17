@@ -19,13 +19,22 @@ bool planeList::empty(){
 
 
 void planeList::append(int index, string data, int capacity){
+    plane* newPlane = new plane;
+    newPlane->id = index;
+    newPlane->name = data;
+    newPlane->capacity = capacity;
+    newPlane->next = nullptr;
+    newPlane->prev = nullptr;
+    
     if(!head){
-        head = new plane{index, data, capacity, nullptr, nullptr};
+        head = newPlane;
         head->prev = head;
         head->next = head;
         tail = head;
     } else{
-        tail->next = new plane{index, data, capacity, head, tail};
+        newPlane->next = head;
+        newPlane->prev = tail;
+        tail->next = newPlane;
         head->prev = tail->next;
         tail = tail->next;
     }
