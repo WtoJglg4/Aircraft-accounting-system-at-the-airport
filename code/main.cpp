@@ -19,63 +19,13 @@ int main(){
     planes.init(planesPath);
     airports.init(airoportsPath);
 
-    //печать списков
-    // planes.print();
-    // airports.print();
-
     //инициализация списка взлетов/посадок
     eventList events(airports, planes);
     events.init(eventsPath);
     
-    // cout << "ПЕРВИЧНАЯ ИНИЦИАЛИЗАЦИЯ:\n";
-    // events.init(eventsPath);
-    // cout << "Список инициализирован\n";
-    // events.print();
-    // system("pause");
-    
-
-    // // cout << "ДОБАВЛЕНИЕ НОВОГО ЭЛЕМЕНТА В СПИСОК:\n";
-    // // event* custom = events.getEventFromConsole();
-    // // events.append(custom);
-    // // events.print();
-    // // system("pause");
-
-
-    
-    // cout << "ПОИСК ЭЛЕМЕНТОВ:\n";
-    // event* custom = events.getEventFromConsole();
-    // events.select(custom);
-    
-
-    // cout << "УДАЛЕНИЕ ЭЛЕМЕНТОВ:\n";
-    // // cout << "\nВведите событие для удаления:\n";
-    // custom = events.getEventFromConsole();
-    // events.remove(custom);
-    // events.print();
-
-    // cout << "ПЕРЕМЕЩЕНИЕ В ПРЯМОМ НАПРАВЛЕНИИ:\n";
-    // int eventId, steps;
-    // cout << "Введите индекс перемещаемого элемента: ";
-    // cin >> eventId;
-    // cout << "Введите кол-во шагов: ";
-    // cin >> steps;
-    // cout << "\nПеремещаем " << eventId << "-й элемент на " << steps << "поз. вперед\n\n" ;
-    // events.moveForward(eventId, steps);
-    // events.print();
-
-    // cout << "ПЕРЕМЕЩЕНИЕ В ОБРАТНОМ НАПРАВЛЕНИИ:\n";
-    // cout << "Введите индекс перемещаемого элемента: ";
-    // cin >> eventId;
-    // cout << "Введите кол-во шагов: ";
-    // cin >> steps;
-    // cout << "Перемещаем " << eventId << "-й элемент на " << steps << "поз. назад\n\n" ;
-    // events.moveBack(eventId, steps);
-    // events.print();
-    // system("pause");  
-
     int command;
     while(true){
-        cout << "1. Добавление события\n2. Удаление\n3. Поиск\n4. Печать списка\n5. Перемещение в прямом направлении\n6. Перемещение в прямом направлении\n\n";
+        cout << "\n1. Добавление события\n2. Удаление\n3. Поиск\n4. Печать списка\n5. Перемещение в прямом направлении\n6. Перемещение в прямом направлении\n7. Выход\n\n";
         cout << "Операция: ";
         cin >> command;
         event* custom;
@@ -118,7 +68,7 @@ int main(){
                 events.moveBack(eventId, steps);
                 break;
             default:
-                break;
+                return 0;
         }        
     }
 }

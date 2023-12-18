@@ -243,7 +243,6 @@ event* eventList::getEventFromConsole(){
             getline(cin, filter);
             newEvent->dataEnd = dataToInt(filter);
             newEvent->dataStrEnd = filter;
-            
             break;
         case 4:
             cout << "Бортовой номер: ";
