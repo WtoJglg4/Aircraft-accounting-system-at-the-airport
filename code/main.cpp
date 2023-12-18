@@ -1,3 +1,17 @@
+/********************************************************************
+*                КАФЕДРА № 304 2 КУРС  1 СЕМ                        *
+*-------------------------------------------------------------------*
+* Project Type  : Win64 Console Application                         *
+* Project Name  : Coursework                                        *
+* File Name     : main.cpp                                          *
+* Language      : C++                                               *
+* Programmer(s) : Глазов В.В.                                       *
+* Modifyed By   :                                                   *
+* Created       : 20/11/23                                          *
+* Last Revision : 18/12/23                                          *
+* Comment(s)    : Курсовая работа                                   *
+*********************************************************************/
+
 #include <iostream>
 #include <string>
 #include <fstream>
