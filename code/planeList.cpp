@@ -25,7 +25,7 @@ void planeList::append(int index, string data, int capacity){
     newPlane->capacity = capacity;
     newPlane->next = nullptr;
     newPlane->prev = nullptr;
-    
+
     if(!head){
         head = newPlane;
         head->prev = head;
@@ -49,7 +49,7 @@ void planeList::print(){
         cout << curr->id << " " << curr->name << " " << curr->capacity << endl;
         curr = curr->next;
     }
-    while(curr != head);    //если использовать обычный while, придется после него делать еще одну итерацию
+    while(curr != head);
     cout << endl << endl;
 }
 
@@ -82,7 +82,7 @@ plane* planeList::getPlane(int id){
         if(curr->id == id) return curr;
         curr = curr->next;
     }
-    while(curr != head);    //если использовать обычный while, придется после него делать еще одну итерацию
+    while(curr != head);
 
     cerr << "в списке нет элемента с таким id " << id;
     exit(1); 
@@ -94,8 +94,7 @@ int planeList::remove(string name){
         if(!name.compare(curr->name)) break;
         curr = curr->next;
     }
-    while(curr != head);    //если использовать обычный while, придется после него делать еще одну итерацию
-
+    while(curr != head);
     if(curr == head){
         if(name.compare(curr->name)) return -1; //не найден
         head = head->next;

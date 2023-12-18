@@ -24,7 +24,7 @@ void airportList::append(int index, string data){
     newAirport->name = data;
     newAirport->next = nullptr;
     newAirport->prev = nullptr;
-    
+
     if(!head){
         head = newAirport;
         head->prev = head;
@@ -48,7 +48,7 @@ void airportList::print(){
         cout << curr->id << " " << curr->name << endl;
         curr = curr->next;
     }
-    while(curr != head);    //если использовать обычный while, придется после него делать еще одну итерацию
+    while(curr != head);
     cout << endl << endl;
 }
 
@@ -75,7 +75,7 @@ int airportList::getId(string data){
         if(!data.compare(curr->name)) return curr->id;
         curr = curr->next;
     }
-    while(curr != head);    //если использовать обычный while, придется после него делать еще одну итерацию
+    while(curr != head);
     
     cerr << "в списке нет элемента " << data << endl;
     exit(1);
@@ -92,7 +92,7 @@ string airportList::getData(int id){
         if(curr->id == id) return curr->name;
         curr = curr->next;
     }
-    while(curr != head);    //если использовать обычный while, придется после него делать еще одну итерацию
+    while(curr != head);
 
     cerr << "в списке нет элемента с таким id " << id;
     exit(1); 
@@ -104,7 +104,7 @@ int airportList::remove(string name){
         if(!name.compare(curr->name)) break;
         curr = curr->next;
     }
-    while(curr != head);    //если использовать обычный while, придется после него делать еще одну итерацию
+    while(curr != head);
 
     if(curr == head){
         if(name.compare(curr->name)) return -1; //не найден

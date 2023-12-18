@@ -15,7 +15,8 @@ struct event{
     int planeBrandId;       //id марка самолета
     int type;               //тип события(вылет/прилет)
     
-    int time;               //время
+    int data;               //дата (дд.мм.гг)
+    string dataStr;         //дни + 30*мес + 365*годы
     string flightNumber;    //номер рейса
     
     string distance;        //ближний/дальний рейс
@@ -24,6 +25,9 @@ struct event{
     float ticketPrice;      //цена билета
 
     event *next, *prev;    //следующий, предыдущий элементы
+
+    int dataEnd;
+    string dataStrEnd;  //используется для поиска
 };
 
 class eventList
@@ -31,8 +35,9 @@ class eventList
     protected:
         event *head, *tail;
         
-        
         int count;
+
+        int dataToInt(string data);
 
     public:
         airportList airports;
@@ -54,10 +59,11 @@ class eventList
         void moveBack(int eventId, int steps);
 
         void printEvent(event* Event);
+        void printEventRow(event* Event);
+        void printTableHead();
 
         void removePlane(string name);
         void removeAirport(string name);
-
 };
 
 #endif

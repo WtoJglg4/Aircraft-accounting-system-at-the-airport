@@ -2,7 +2,7 @@
 
 Dep
 0
-1701062100
+02.06.23
 ZZZ789
 1
 medium
@@ -12,7 +12,7 @@ medium
 
 Dep
 2
-1701067200
+12.06.23
 GHI234
 0
 short
@@ -22,7 +22,7 @@ short
 
 Dep
 4
-1701069900
+12.06.23
 XXX123
 4
 long
@@ -32,7 +32,7 @@ long
 
 Arr
 3
-1701072000
+13.06.23
 GHI234
 0
 short
@@ -42,7 +42,7 @@ short
 
 Dep
 7
-1701073200
+14.06.23
 JKL567
 3
 medium
@@ -52,7 +52,7 @@ medium
 
 Dep
 9
-1701078900
+14.06.23
 DEF789
 5
 short
@@ -62,7 +62,7 @@ short
 
 Arr
 8
-1701080400
+15.06.23
 JKL567
 3
 medium
@@ -72,7 +72,7 @@ medium
 
 Arr
 1
-1701084000
+15.06.23
 ZZZ789
 1
 medium
@@ -82,7 +82,7 @@ medium
 
 Arr
 6
-1701084300
+16.06.23
 XXX123
 4
 long
@@ -92,7 +92,7 @@ long
 
 Dep
 11
-1701085500
+17.06.23
 YYY456
 2
 long
@@ -102,163 +102,10 @@ long
 
 Dep
 12
-1701091800
+17.06.23
 ABC456
 6
 long
 280
 300
 900
-
-//New
-Arr
-LAX, Los Angeles
-SYD, Sydney
-1701091800
-1701099999
-ABC456
-Boeing 787
-long
-280
-300
-900
-
-
-//////////////////
-Dep
-Dep:Dubai
-Arr:Bangkok
-DepTime:1701062100
-ArrTime: -
-Flight number: ZZZ789
-Plane brand: Airbus A320
-Distance: medium
-Passengers: 180
-Tickets: 150
-Ticket price: $400
-
-Dep
-Dep: CDG, Paris
-Arr: FRA, Frankfurt
-Dep time: 09:40 1701067200
-Arr time: -
-Flight number: GHI234
-Plane brand: Airbus A319
-Distance: short
-Passengers: 120
-Tickets: 100
-Ticket price: $250
-
-Dep
-Dep: SVO, Moscow
-Arr: LHR, London
-Dep time: 10:25 1701069900
-Arr time: -
-Flight number: XXX123
-Plane brand: Boeing 747
-Distance: long
-Passengers: 250
-Tickets: 200
-Ticket price: $500
-
-Arr
-Dep: CDG, Paris
-Arr: FRA, Frankfurt
-Dep time: 09:40 1701067200
-Arr time: 11:00 1701072000
-Flight number: GHI234
-Plane brand: Airbus A319
-Distance: short
-Passengers: 120
-Tickets: 100
-Ticket price: $250
-
-Dep
-Dep: ATL, Atlanta
-Arr: ORD, Chicago
-Dep time: 11:20 1701073200
-Arr time: -
-Flight number: JKL567
-Plane brand: Boeing 737
-Distance: medium
-Passengers: 200
-Tickets: 180
-Ticket price: $350
-
-Dep
-Dep: NRT, Tokyo
-Arr: ICN, Seoul
-Dep time: 12:55 1701078900
-Arr time: -
-Flight number: DEF789
-Plane brand: Boeing 777
-Distance: short
-Passengers: 150
-Tickets: 120
-Ticket price: $300
-
-Arr
-Dep: ATL, Atlanta
-Arr: ORD, Chicago
-Dep time: 11:20 1701073200
-Arr time: 13:20 1701080400
-Flight number: JKL567
-Plane brand: Boeing 737
-Distance: medium
-Passengers: 200
-Tickets: 180
-Ticket price: $350
-
-Arr
-Dep: DXB, Dubai
-Arr: BKK, Bangkok
-Dep time: 08:15 1701062100
-Arr time: 14:20 1701084000
-Flight number: ZZZ789
-Plane brand: Airbus A320
-Distance: medium
-Passengers: 180
-Tickets: 150
-Ticket price: $400
-
-Arr
-Dep: SVO, Moscow
-Arr: LHR, London
-Dep time: 10:25 1701069900
-Arr time: 14:25 1701084300
-Flight number: XXX123
-Plane brand: Boeing 747
-Distance: long
-Passengers: 250
-Tickets: 200
-Ticket price: $500
-
-Dep
-Dep: JFK, New York
-Arr: CDG, Paris
-Dep time: 14:45 1701085500
-Arr time: -
-Flight number: YYY456
-Plane brand: Airbus A380
-Distance: long
-Passengers: 300
-Tickets: 280
-Ticket price: $700
-
-Dep
-Dep: LAX, Los Angeles
-Arr: SYD, Sydney
-Dep time: 16:30 1701091800
-Arr time: -
-Flight number: ABC456
-Plane brand: Boeing 787
-Distance: long
-Passengers: 300
-Tickets: 280
-Ticket price: $900
-
-
-
-
-
-
