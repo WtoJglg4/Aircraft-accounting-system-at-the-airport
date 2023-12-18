@@ -15,8 +15,8 @@ struct event{
     int planeBrandId;       //id самолета
     int type;               //тип события(вылет/прилет)
     
-    int data;               //дата (дд.мм.гг)
-    string dataStr;         //дни + 30*мес + 365*годы
+    int date;               //дата (дд.мм.гг)
+    string dateStr;         //дни + 30*мес + 365*годы
     string flightNumber;    //номер рейса
     
     string distance;        //ближний/дальний рейс
@@ -26,8 +26,8 @@ struct event{
 
     event *next, *prev;    //следующий, предыдущий элементы
 
-    int dataEnd;        //конечная дата интервале
-    string dataStrEnd;  //используется для поиска
+    int dateEnd;        //конечная дата интервале
+    string dateStrEnd;  //используется для поиска
 };
 
 //список событий
@@ -42,7 +42,8 @@ class eventList
         void printEventRow(event* Event);                       //печать события в строке таблицы
         void removePlane(string name);                          //удаление самолета из списка
         void removeAirport(string name);                        //удаление аэропорта из списка
-        int dataToInt(string data);                             //дата string(дд.мм.гг)->int
+        int dateToInt(string date);                             //дата string(дд.мм.гг)->int
+        bool isDateCorrect(string date);                        //проверка даты на корректность
 
     public:
         airportList airports;   //список аэропортов

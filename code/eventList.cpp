@@ -19,9 +19,9 @@ eventList::eventList(const char *path, airportList airport, planeList plane){
 //получение события из файла
 event* eventList::getEvent(ifstream& file)
 {
-    string typeStr, airportStr, dataStr;            
+    string typeStr, airportStr, dateStr;            
     string flightNumber, planeBrand, distance, onBoardStr, soldStr, ticketPriceStr;
-    int type, data, onBoard, sold; 
+    int type, date, onBoard, sold; 
     float ticketPrice;
 
     //считать необходимые поля из файла
@@ -35,8 +35,14 @@ event* eventList::getEvent(ifstream& file)
     getline(file, airportStr);
     int airportId = atoi(airportStr.c_str());
 
-    getline(file, dataStr, '\n');
-    data = dataToInt(dataStr);
+    getline(file, dateStr, '\n');
+    if(!isDateCorrect(dateStr)){
+        cerr << "\nERROR: введена некорректная дата\n";
+        system("pause");
+        exit(1);   
+    }
+    date = dateToInt(dateStr);
+    
 
     getline(file, flightNumber, '\n');
 
@@ -59,8 +65,8 @@ event* eventList::getEvent(ifstream& file)
     newEvent->id = 0;
     newEvent->type = type;
     newEvent->airportId = airportId;
-    newEvent->dataStr = dataStr;
-    newEvent->data = data;
+    newEvent->dateStr = dateStr;
+    newEvent->date = date;
     newEvent->flightNumber = flightNumber;
     newEvent->planeBrandId = planeBrandId;
     newEvent->distance = distance;
@@ -187,9 +193,9 @@ void eventList::removeAirport(string name){
 event* eventList::getEventFromConsole(){
     
     //инициализация дефолтными значениями
-    string typeStr = "-1", airport = "-", dataStr = "-1";          
+    string typeStr = "-1", airport = "-", dateStr = "-1";          
     string flightNumber = "-", planeBrand = "-", distance = "-", onBoardStr = "-1", soldStr = "-1", ticketPriceStr = "-1";
-    int type = -1, depdata = -1, arrdata = -1, onBoard = -1, sold = -1; 
+    int type = -1, depdate = -1, arrdate = -1, onBoard = -1, sold = -1; 
     float ticketPrice = -1;
 
     //заполняем дефолтными значениями
@@ -197,8 +203,8 @@ event* eventList::getEventFromConsole(){
     newEvent->id = -1;
     newEvent->type = -1;
     newEvent->airportId = -1;
-    newEvent->data = -1;
-    newEvent->dataEnd = -1;
+    newEvent->date = -1;
+    newEvent->dateEnd = -1;
     newEvent->flightNumber = "-";
     newEvent->planeBrandId = -1;
     newEvent->distance = "-";
@@ -242,13 +248,23 @@ event* eventList::getEventFromConsole(){
         case 3:
             cout << "Дата начала: ";
             getline(cin, filter);
-            newEvent->data = dataToInt(filter);
-            newEvent->dataStr = filter;
+            if(!isDateCorrect(filter)){
+                cerr << "\nERROR: введена некорректная дата\n";
+                system("pause");
+                exit(1);   
+            }
+            newEvent->date = dateToInt(filter);
+            newEvent->dateStr = filter;
 
             cout << "Дата конца: "; 
             getline(cin, filter);
-            newEvent->dataEnd = dataToInt(filter);
-            newEvent->dataStrEnd = filter;
+            newEvent->dateEnd = dateToInt(filter);
+            if(!isDateCorrect(filter) || newEvent->date > newEvent->dateEnd){
+                cerr << "\nERROR: введена некорректная дата\n";
+                system("pause");
+                exit(1);   
+            }
+            newEvent->dateStrEnd = filter;
             break;
         case 4:
             cout << "Бортовой номер: ";
@@ -299,7 +315,7 @@ bool eventList::satisfyPatternEvent(event* pattern, event* event){
     if(pattern->onBoard != -1 && pattern->onBoard != event->onBoard) return false;
     if(pattern->sold != -1 && pattern->sold != event->sold) return false;
     if(pattern->ticketPrice != -1 && pattern->ticketPrice != event->ticketPrice) return false;
-    if(pattern->data != -1 && pattern->dataEnd != -1 && (pattern->data > event->data || pattern->dataEnd < event->data)) return false;
+    if(pattern->date != -1 && pattern->dateEnd != -1 && (pattern->date > event->date || pattern->dateEnd < event->date)) return false;
     return true;
 }
 
@@ -432,7 +448,7 @@ void eventList::printTableHead(){
         cout << "+";
     }
 
-    cout << "\n|id|type|     airport     |   data   |flightNumber|  planeBrand   |distance|onBoard|sold|ticketPrice|\n+";
+    cout << "\n|id|type|     airport     |   date   |flightNumber|  planeBrand   |distance|onBoard|sold|ticketPrice|\n+";
     
     for(int i = 0; i < size(spaces); i++){
         for(int j = 0; j < spaces[i]; j++) cout << "-";
@@ -451,7 +467,7 @@ void eventList::printEventRow(event* curr){
     } else etype = "Arr";
     
     cout << "|" << setw(2) << curr->id << "|" << setw(4) << etype << "|" << setw(17) << airports.getData(curr->airportId) << "|";
-    cout << setw(10) << curr->dataStr << "|" << setw(12) << curr->flightNumber << "|" << setw(15) << plane->name << "|" << setw(8) << curr->distance;
+    cout << setw(10) << curr->dateStr << "|" << setw(12) << curr->flightNumber << "|" << setw(15) << plane->name << "|" << setw(8) << curr->distance;
     cout << "|" << setw(7) << curr->onBoard << "|" << setw(4) << curr->sold << "|" << setw(11) << curr->ticketPrice << "|\n+";
     for(int i = 0; i < size(spaces); i++){
         for(int j = 0; j < spaces[i]; j++) cout << "-";
@@ -461,11 +477,29 @@ void eventList::printEventRow(event* curr){
 }
 
 //дата string(дд.мм.гг)->int        
-int eventList::dataToInt(string data){
-    int days = (data[0] - 48) * 10 + data[1] - 48;
-    int months = (data[3] - 48) * 10 + data[4] - 48;
-    int years = (data[6] - 48) * 10 + data[7] - 48;
+int eventList::dateToInt(string date){
+    int days = (date[0] - 48) * 10 + date[1] - 48;
+    int months = (date[3] - 48) * 10 + date[4] - 48;
+    int years = (date[6] - 48) * 10 + date[7] - 48;
     return days + 30*months + 365*years;
 }
 
+//проверка введенной даты на корректность (дд.мм.гг)
+bool eventList::isDateCorrect(string date){
+    if(date.length() != 8 || date[2] != 46 || date[5] != 46)  return false; //46 - код "."
+    if(date[0] < 48 || date[0] > 57)  return false;     //является ли символ цифрой
+    if(date[1] < 48 || date[1] > 57)  return false;     //48 - код "0", 57 - код "9"
+    if(date[3] < 48 || date[3] > 57)  return false;
+    if(date[4] < 48 || date[4] > 57)  return false;
+    if(date[6] < 48 || date[6] > 57)  return false;
+    if(date[7] < 48 || date[7] > 57)  return false;
+
+    int days = (date[0] - 48) * 10 + date[1] - 48;
+    int months = (date[3] - 48) * 10 + date[4] - 48;
+    int years = (date[6] - 48) * 10 + date[7] - 48;
+
+    if(days < 1 || days > 31 || months < 1 || months > 12 || years < 0) return false;   //корректность дня, месяца и года
+
+    return true;
+}
 
