@@ -191,12 +191,6 @@ void eventList::removeAirport(string name){
 
 //получение события из консоли
 event* eventList::getEventFromConsole(){
-    
-    //инициализация дефолтными значениями
-    string typeStr = "-1", airport = "-", dateStr = "-1";          
-    string flightNumber = "-", planeBrand = "-", distance = "-", onBoardStr = "-1", soldStr = "-1", ticketPriceStr = "-1";
-    int type = -1, depdate = -1, arrdate = -1, onBoard = -1, sold = -1; 
-    float ticketPrice = -1;
 
     //заполняем дефолтными значениями
     event *newEvent = new event;
@@ -461,13 +455,25 @@ void eventList::printTableHead(){
 void eventList::printEventRow(event* curr){
     int spaces[] = {2, 4, 17, 10, 12, 15, 8, 7, 4, 11};
     string etype;
-    plane *plane = planes.getPlane(curr->planeBrandId);
+    
     if(curr->type){
         etype = "Dep";
     } else etype = "Arr";
     
-    cout << "|" << setw(2) << curr->id << "|" << setw(4) << etype << "|" << setw(17) << airports.getData(curr->airportId) << "|";
-    cout << setw(10) << curr->dateStr << "|" << setw(12) << curr->flightNumber << "|" << setw(15) << plane->name << "|" << setw(8) << curr->distance;
+    string airportName = "-";
+    if(curr->airportId > -1){
+        airportName = airports.getData(curr->airportId);
+    }
+
+    string planeName = "-";
+    if(curr->planeBrandId > -1){
+        plane *plane = planes.getPlane(curr->planeBrandId);
+        planeName = plane->name;
+    }
+    
+    
+    cout << "|" << setw(2) << curr->id << "|" << setw(4) << etype << "|" << setw(17) << airportName << "|";
+    cout << setw(10) << curr->dateStr << "|" << setw(12) << curr->flightNumber << "|" << setw(15) << planeName << "|" << setw(8) << curr->distance;
     cout << "|" << setw(7) << curr->onBoard << "|" << setw(4) << curr->sold << "|" << setw(11) << curr->ticketPrice << "|\n+";
     for(int i = 0; i < size(spaces); i++){
         for(int j = 0; j < spaces[i]; j++) cout << "-";
