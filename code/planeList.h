@@ -5,32 +5,28 @@
 #include <fstream>
 using namespace std;
 
+//марка самолета
 struct plane{
-    int id;
-    string name;     
-    int capacity;   //вместимость
-    plane *next, *prev;
+    int id;             //id
+    string name;        //название марки
+    int capacity;       //вместимость
+    plane *next, *prev; //следующий, предыдущий элементы
 };
 
+//список марок
 class planeList{
     protected:
-        
-        int count;
+        plane *head, *tail; //начало, конец списка
+        int count;          //количество элементов
     public:
-        plane *head, *tail;
-
-        planeList();
-        
-        int length();
-        bool empty();
-
-        void append(int index, string data, int capacity);
-        plane* getPlane(int id);
-        void init(const char *path);
-        int remove(string name);
-        void print();
-        // string removeById(int id);
-        // int removeByData(string data);
+        planeList();                                        //конструктор класса planeList
+        void init(const char *path);                        //инициализация из файла
+        void append(int index, string data, int capacity);  //добавление аэропорта в конец
+        int remove(string name);                            //удаление элемента
+        int length();                                       //длина списка
+        bool empty();                                       //проверка на пустоту
+        void print();                                       //печать списка
+        plane* getPlane(int id);                            //получение названия по id
 };
 
 #endif

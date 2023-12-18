@@ -9,8 +9,6 @@ using namespace std;
 //путь до списка взлетов/посадок, списка марок самолетов, списка аэропортов
 const char *eventsPath = "input/input.txt", *planesPath = "input/planes.txt", *airoportsPath = "input/airoports.txt";
 
-
-//g++ main.cpp eventList.cpp planeList.cpp airportList.cpp -o output.exe
 //g++ main.cpp eventlist.cpp planelist.cpp airportlist.cpp -o output.exe
 int main(){
     //инициализация списка марок самолетов и списка аэропортов
@@ -20,12 +18,12 @@ int main(){
     airports.init(airoportsPath);
 
     //инициализация списка взлетов/посадок
-    eventList events(airports, planes);
-    events.init(eventsPath);
+    eventList events(eventsPath, airports, planes);
     
     int command;
     while(true){
-        cout << "\n1. Добавление события\n2. Удаление\n3. Поиск\n4. Печать списка\n5. Перемещение в прямом направлении\n6. Перемещение в прямом направлении\n7. Выход\n\n";
+        cout << "\n----------MENU----------\n";
+        cout << "1. Добавление события\n2. Удаление\n3. Поиск\n4. Печать списка\n5. Перемещение в прямом направлении\n6. Перемещение в прямом направлении\n7. Выход\n\n";
         cout << "Операция: ";
         cin >> command;
         event* custom;

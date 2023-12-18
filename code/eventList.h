@@ -7,12 +7,12 @@
 #include "airportList.h"
 using namespace std;
 
-const int arrival = 0, departure = 1;
 
+//событие вылет/прилет
 struct event{
-    int id;                 //id индекс в списке
-    int airportId;          //id аэропорт
-    int planeBrandId;       //id марка самолета
+    int id;                 //id 
+    int airportId;          //id аэропорта
+    int planeBrandId;       //id самолета
     int type;               //тип события(вылет/прилет)
     
     int data;               //дата (дд.мм.гг)
@@ -26,44 +26,41 @@ struct event{
 
     event *next, *prev;    //следующий, предыдущий элементы
 
-    int dataEnd;
+    int dataEnd;        //конечная дата интервале
     string dataStrEnd;  //используется для поиска
 };
 
+//список событий
 class eventList
 {
     protected:
-        event *head, *tail;
-        
-        int count;
+        event *head, *tail;                                     //начало/конец списка
+        int count;                                              //количество элементов
 
-        int dataToInt(string data);
+        bool satisfyPatternEvent(event* pattern, event* event); //сравнение шаблона события с событием(для фильтрации)
+        void printTableHead();                                  //печать головы таблицы
+        void printEventRow(event* Event);                       //печать события в строке таблицы
+        void removePlane(string name);                          //удаление самолета из списка
+        void removeAirport(string name);                        //удаление аэропорта из списка
+        int dataToInt(string data);                             //дата string(дд.мм.гг)->int
 
     public:
-        airportList airports;
-        planeList planes;
+        airportList airports;   //список аэропортов
+        planeList planes;       //список марок самолетов
 
-        eventList(airportList airport, planeList plane);
+        eventList(const char *path, airportList airport, planeList plane);    //конструктор класса eventList
 
-        void init(const char *path);
-        void append(event* newEvent);
-        void print();
-        bool empty();
-        int len();
-        event* getEvent(ifstream& file);
-        event* getEventFromConsole();
-        void select(event* Event);
-        void remove(event* Event);
-        bool satisfyPatternEvent(event* pattern, event* event);
-        void moveForward(int eventId, int steps);
-        void moveBack(int eventId, int steps);
-
-        void printEvent(event* Event);
-        void printEventRow(event* Event);
-        void printTableHead();
-
-        void removePlane(string name);
-        void removeAirport(string name);
+        void init(const char *path);                //инициализация списка из файла
+        void append(event* newEvent);               //добавление события в конец
+        void print();                               //печать списка в таблицу
+        bool empty();                               //проверка на пустоту
+        int len();                                  //длина списка
+        event* getEvent(ifstream& file);            //получение события из файла
+        event* getEventFromConsole();               //получение события из консоли
+        void select(event* Event);                  //поиск по списку элементов, соответствующих шаблону
+        void remove(event* Event);                  //удаление элементов, соответствующих шаблону
+        void moveForward(int eventId, int steps);   //перемещение элемента вперед по списку
+        void moveBack(int eventId, int steps);      //перемещение элемента назад по списку
 };
 
 #endif

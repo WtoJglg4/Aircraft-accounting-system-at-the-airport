@@ -2,22 +2,33 @@
 #include <string>
 #include "planeList.h"
 
+//конструктор класса planeList
 planeList::planeList(){
     head = nullptr;
     tail = nullptr;
     count = 0;
 }
 
-int planeList::length(){
-    return count;
+//инициализация из файла
+void planeList::init(const char *path){
+    ifstream file(path);
+
+    string data;
+    int capacity;
+    while(!file.eof()){
+        int index, capacity;
+        file >> index;
+        getline(file, data);
+        data.erase(0, 1);
+        file >> capacity;
+        append(index, data, capacity);
+    }
+    file.close();
+
+    printf("Добавлено %d элементов\n", count);
 }
 
-
-bool planeList::empty(){
-    return count == 0;
-}
-
-
+//добавление аэропорта в конец
 void planeList::append(int index, string data, int capacity){
     plane* newPlane = new plane;
     newPlane->id = index;
@@ -41,53 +52,7 @@ void planeList::append(int index, string data, int capacity){
     count++;
 }
 
-void planeList::print(){
-    
-    cout << "planesList:\n";
-    plane* curr = head;
-    do{
-        cout << curr->id << " " << curr->name << " " << curr->capacity << endl;
-        curr = curr->next;
-    }
-    while(curr != head);
-    cout << endl << endl;
-}
-
-void planeList::init(const char *path){
-    ifstream file(path);
-
-    string data;
-    int capacity;
-    while(!file.eof()){
-        int index, capacity;
-        file >> index;
-        getline(file, data);
-        data.erase(0, 1);
-        file >> capacity;
-        append(index, data, capacity);
-    }
-    file.close();
-
-    printf("Добавлено %d элементов\n", count);
-}
-
-plane* planeList::getPlane(int id){
-    if(id < 0 || id >= count){
-        cerr << "в списке нет элемента с таким id " << id;
-        exit(1); 
-    }
-
-    plane* curr = head;
-    do{
-        if(curr->id == id) return curr;
-        curr = curr->next;
-    }
-    while(curr != head);
-
-    cerr << "в списке нет элемента с таким id " << id;
-    exit(1); 
-}
-
+//удаление элемента
 int planeList::remove(string name){
     plane *curr = head;
     do{
@@ -110,4 +75,45 @@ int planeList::remove(string name){
     delete tmp;
     count--;
     return id;
+}
+
+//печать списка
+void planeList::print(){
+    
+    cout << "planesList:\n";
+    plane* curr = head;
+    do{
+        cout << curr->id << " " << curr->name << " " << curr->capacity << endl;
+        curr = curr->next;
+    }
+    while(curr != head);
+    cout << endl << endl;
+}
+
+//длина списка
+int planeList::length(){
+    return count;
+}
+
+//проверка на пустоту
+bool planeList::empty(){
+    return count == 0;
+}
+
+//получение названия по id
+plane* planeList::getPlane(int id){
+    if(id < 0 || id >= count){
+        cerr << "в списке нет элемента с таким id " << id;
+        exit(1); 
+    }
+
+    plane* curr = head;
+    do{
+        if(curr->id == id) return curr;
+        curr = curr->next;
+    }
+    while(curr != head);
+
+    cerr << "в списке нет элемента с таким id " << id;
+    exit(1); 
 }

@@ -6,26 +6,31 @@
 #include "airportList.h"
 #include <iomanip>
 
-eventList::eventList(airportList airport, planeList plane){
+//конструктор класса eventList
+eventList::eventList(const char *path, airportList airport, planeList plane){
     airports = airport;
     planes = plane;
     head = nullptr;
     tail = nullptr;
     count = 0;
+    init(path); //инициализация списка из файла
 }
 
+//получение события из файла
 event* eventList::getEvent(ifstream& file)
 {
-    string typeStr, airportStr, dataStr;          
+    string typeStr, airportStr, dataStr;            
     string flightNumber, planeBrand, distance, onBoardStr, soldStr, ticketPriceStr;
     int type, data, onBoard, sold; 
     float ticketPrice;
 
-    getline(file, typeStr);    //пробел
+    //считать необходимые поля из файла
+    //конвертировать в необходимый тип
+    getline(file, typeStr);     //пробел
     getline(file, typeStr);
-    if(typeStr.compare("Dep")){
-        type = arrival;
-    } else type = departure;
+    if(typeStr.compare("Dep")){ //установить необходимый тип события
+        type = 0;               //прилет
+    } else type = 1;            //вылет
 
     getline(file, airportStr);
     int airportId = atoi(airportStr.c_str());
@@ -49,6 +54,7 @@ event* eventList::getEvent(ifstream& file)
     getline(file, ticketPriceStr, '\n');
     ticketPrice = atof(ticketPriceStr.c_str());
     
+    //инициализировать новое событие
     event *newEvent = new event;
     newEvent->id = 0;
     newEvent->type = type;
@@ -67,22 +73,24 @@ event* eventList::getEvent(ifstream& file)
     return newEvent;
 }
 
+//инициализация списка из файла
 void eventList::init(const char *path){
     ifstream file(path);
     string eventsCountString;
 
     getline(file, eventsCountString);
-    int eventsCount = atoi(eventsCountString.c_str());
-    event* newEvent ;
+    int eventsCount = atoi(eventsCountString.c_str());  //счетчик
+    event* newEvent;    //создать новое событие
     for(int i = 0; i < eventsCount; i++){
-        newEvent = getEvent(file);
-        append(newEvent);
+        newEvent = getEvent(file);  //инициализировать из файла
+        append(newEvent);           //добавить в конец списка
     }
 
     file.close();
     printf("Добавлено %d событий\n", eventsCount);
 }
 
+//добавление события в конец
 void eventList::append(event* newEvent){
     if(!head){
         head = newEvent;
@@ -100,17 +108,7 @@ void eventList::append(event* newEvent){
     count++;
 }
 
-//печать события
-void eventList::printEvent(event* curr){
-    string etype;
-    plane *plane = planes.getPlane(curr->planeBrandId);
-    if(curr->type){
-        etype = "Dep";
-    } else etype = "Arr";
-    cout << "id: " << curr->id << "\ntype: " << etype << "\nairport: " << airports.getData(curr->airportId) << "\ndata: " << curr->dataStr << "\nflightNumber: ";
-    cout << curr->flightNumber << "\nplaneBrand: " << plane->name << "\ndistance: " << curr->distance << "\nonBoard: " << curr->onBoard << "\nsold: " << curr->sold << "\nticketPrice: " << curr->ticketPrice << "\n\n";
-}
-
+//печать списка в таблицу
 void eventList::print(){
     if(empty()){
         cerr << "eventList пуст\n";
@@ -118,27 +116,30 @@ void eventList::print(){
     }
 
     cout << "Всего событий: " << count << endl;
-    printTableHead();
+    printTableHead();           //печать головы таблицы
     event* curr = head;
     do{
-        // printEvent(curr);
-        printEventRow(curr);
+        printEventRow(curr);    //печать элемента в строке таблицы
         curr = curr->next;
     }
     while(curr != head);
 }
 
+//проверка на пустоту
 bool eventList::empty(){
     return count == 0;
 }
 
+//длина списка
 int eventList::len(){
     return count;
 }
 
+//удаление самолета из списка
 void eventList::removePlane(string name){
-    int rmId = planes.remove(name); //удалить из списка самолетов
+    int rmId = planes.remove(name);     //удалить из списка самолетов
 
+    //удалить все связанные с эти самолетом записи в списке
     event *curr = head;
     do{
         if(rmId == curr->planeBrandId){
@@ -158,9 +159,11 @@ void eventList::removePlane(string name){
     while(curr != head);     
 }
 
+//удаление аэропорта из списка
 void eventList::removeAirport(string name){
-    int rmId = airports.remove(name); //удалить из списка самолетов
+    int rmId = airports.remove(name); //удалить из списка аэропортов
 
+    //удалить все связанные с эти аэропортом записи в списке
     event *curr = head;
     do{
         if(rmId == curr->airportId){
@@ -180,12 +183,16 @@ void eventList::removeAirport(string name){
     while(curr != head);
 }
 
+//получение события из консоли
 event* eventList::getEventFromConsole(){
+    
+    //инициализация дефолтными значениями
     string typeStr = "-1", airport = "-", dataStr = "-1";          
     string flightNumber = "-", planeBrand = "-", distance = "-", onBoardStr = "-1", soldStr = "-1", ticketPriceStr = "-1";
     int type = -1, depdata = -1, arrdata = -1, onBoard = -1, sold = -1; 
     float ticketPrice = -1;
 
+    //заполняем дефолтными значениями
     event *newEvent = new event;
     newEvent->id = -1;
     newEvent->type = -1;
@@ -203,6 +210,7 @@ event* eventList::getEventFromConsole(){
     printf("3. Диапазон дат\n4. Бортовой номер\n5. ID марки самолета\n6. Дистанция\n");
     printf("7. Пассажиров на борту\n8. Продано билетов\n9. Цена билета\n10. Выйти из добавления фильтра\n");
 
+    //юзер заполняет необходимые ему поля, создавая шаблон(некоторые поля могут остаться дефолтными)
     int num;
     string filter;
     do{
@@ -211,8 +219,6 @@ event* eventList::getEventFromConsole(){
         cout << "Операция: ";
         getline(cin, filter);
         num = atoi(filter.c_str());
-        // cin >> num;
-        // cout <<"NUM " << num << endl;
 
         switch (num)
         {
@@ -281,11 +287,12 @@ event* eventList::getEventFromConsole(){
     return newEvent;
 }
 
+//сравнение шаблона события с событием(для фильтрации)
 bool eventList::satisfyPatternEvent(event* pattern, event* event){
+    //если поле шаблона установлено в дефолт->игнорируем, иначе сравниваем с событием
     if(pattern->id != -1 && pattern->id != event->id) return false;
     if(pattern->type != -1 && pattern->type != event->type) return false;
     if(pattern->airportId != -1 && pattern->airportId != event->airportId) return false;
-    // if(pattern->data != -1 && pattern->data != event->data) return false;
     if(pattern->flightNumber.compare("-") && pattern->flightNumber.compare(event->flightNumber)) return false;
     if(pattern->planeBrandId != -1 && pattern->planeBrandId != event->planeBrandId) return false;
     if(pattern->distance.compare("-") && pattern->distance.compare(event->distance)) return false;
@@ -296,6 +303,7 @@ bool eventList::satisfyPatternEvent(event* pattern, event* event){
     return true;
 }
 
+//поиск по списку элементов, соответствующих шаблону
 void eventList::select(event* Event){
     if(empty()){
         cout << "Список пуст\n";
@@ -306,10 +314,9 @@ void eventList::select(event* Event){
     event* curr = head;
     cout << "Найденные события:\n";
     
-    bool tableHead = false;
+    bool tableHead = false;     //для печати шапки таблицы
     do{
         if(satisfyPatternEvent(Event, curr)) {
-            // printEvent(curr);
             if(!tableHead){
                 printTableHead();
                 tableHead = true;
@@ -327,6 +334,7 @@ void eventList::select(event* Event){
     } else cout << "Событий найдено: " << equalsCount << endl << endl;
 }
 
+//удаление элементов, соответствующих шаблону
 void eventList::remove(event* Event){
     if(empty()){
         cout << "Список пуст\n";
@@ -340,7 +348,6 @@ void eventList::remove(event* Event){
     bool tableHead = false;
     do{
         if(satisfyPatternEvent(Event, curr)){
-            // printEvent(curr);
             if(!tableHead){
                 printTableHead();
                 tableHead = true;
@@ -373,6 +380,7 @@ void eventList::remove(event* Event){
     while(curr != head);
 }
 
+//перемещение элемента вперед по списку
 void eventList::moveForward(int eventId, int steps){
     if(eventId >= count || eventId < 0) {
         cout << "Элемента с таким id нет\n";
@@ -407,12 +415,14 @@ void eventList::moveForward(int eventId, int steps){
     while(curr != head);
 }
 
+//перемещение элемента назад по списку
 void eventList::moveBack(int eventId, int steps){
     steps = (count - steps - 1)%count;
     if(steps < 0) steps += count;
     moveForward(eventId, steps);
 }
 
+//печать головы таблицы
 void eventList::printTableHead(){
     int spaces[] = {2, 4, 17, 10, 12, 15, 8, 7, 4, 11};
     
@@ -421,7 +431,7 @@ void eventList::printTableHead(){
         for(int j = 0; j < spaces[i]; j++) cout << "-";
         cout << "+";
     }
-    
+
     cout << "\n|id|type|     airport     |   data   |flightNumber|  planeBrand   |distance|onBoard|sold|ticketPrice|\n+";
     
     for(int i = 0; i < size(spaces); i++){
@@ -431,6 +441,7 @@ void eventList::printTableHead(){
     cout << endl;
 }
 
+//печать события в строке таблицы
 void eventList::printEventRow(event* curr){
     int spaces[] = {2, 4, 17, 10, 12, 15, 8, 7, 4, 11};
     string etype;
@@ -438,8 +449,6 @@ void eventList::printEventRow(event* curr){
     if(curr->type){
         etype = "Dep";
     } else etype = "Arr";
-    // cout << "id: " << curr->id << "\ntype: " << etype << "\nairport: " << airports.getData(curr->airportId) << "\ndata: " << curr->data << "\nflightNumber: ";
-    // cout << curr->flightNumber << "\nplaneBrand: " << plane->name << "\ndistance: " << curr->distance << "\nonBoard: " << curr->onBoard << "\nsold: " << curr->sold << "\nticketPrice: " << curr->ticketPrice << "\n\n";
     
     cout << "|" << setw(2) << curr->id << "|" << setw(4) << etype << "|" << setw(17) << airports.getData(curr->airportId) << "|";
     cout << setw(10) << curr->dataStr << "|" << setw(12) << curr->flightNumber << "|" << setw(15) << plane->name << "|" << setw(8) << curr->distance;
@@ -450,7 +459,8 @@ void eventList::printEventRow(event* curr){
     }
     cout << endl;
 }
-        
+
+//дата string(дд.мм.гг)->int        
 int eventList::dataToInt(string data){
     int days = (data[0] - 48) * 10 + data[1] - 48;
     int months = (data[3] - 48) * 10 + data[4] - 48;
