@@ -1,0 +1,18 @@
+0 Airbus A319
+160
+1 Airbus A320
+180
+2 Airbus A380
+850
+3 Boeing 737
+220
+4 Boeing 747
+660
+5 Boeing 777
+550
+6 Boeing 787
+330
+7 MS-21
+210
+8 SSJ-100
+110

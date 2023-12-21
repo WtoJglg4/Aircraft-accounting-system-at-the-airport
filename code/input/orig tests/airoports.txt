@@ -1,0 +1,14 @@
+0 DXB, Dubai
+1 BKK, Bangkok
+2 CDG, Paris
+3 FRA, Frankfurt
+4 VKO, Moscow
+5 SVO, Moscow
+6 LHR, London
+7 ATL, Atlanta
+8 ORD, Chicago
+9 NRT, Tokyo
+10 ICN, Seoul
+11 JFK, New York
+12 LAX, Los Angeles
+13 SYD, Sydney

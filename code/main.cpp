@@ -23,11 +23,23 @@ using namespace std;
 //путь до списка взлетов/посадок, списка марок самолетов, списка аэропортов
 const char *eventsPath = "input/input.txt", *planesPath = "input/planes.txt", *airoportsPath = "input/airoports.txt";
 
+Error* testFile(const char *path);
+
 //g++ main.cpp eventlist.cpp planelist.cpp airportlist.cpp -o output.exe
 int main(){
+    //проверка на существование и непустоту файлов
+    Error* err;
+    const char *files[] = {eventsPath, planesPath, airoportsPath};
+    for(int i = 0; i < size(files); i++){
+        err = testFile(files[i]);
+        if(err){
+            cout << err->message << " " << files[i] << endl;
+            system("pause");
+            return err->code;
+        }
+    }
 
     cout << "СИСТЕМА УЧЕТА ВОЗДУШНЫХ СУДОВ В АЭРОПОРТУ\n\n\n";
-
 
     //инициализация списка марок самолетов и списка аэропортов
     planeList planes;
@@ -114,4 +126,19 @@ int main(){
                 return 0;
         }        
     }
+}
+
+Error* testFile(const char *path){
+    ifstream file(path);
+    Error *err = new Error;
+    if(!file.is_open()){
+        err->code = 1;
+        err->message = "файл невозможно открыть";
+    } else if(file.peek() == EOF){
+        err->code = 2;
+        err->message = "файл пуст";
+    } else err = nullptr;
+
+    file.close();
+    return err;
 }
