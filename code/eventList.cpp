@@ -48,7 +48,7 @@ event* eventList::getEvent(ifstream& file)
 
     getline(file, dateStr, '\n');
     if(!isDateCorrect(dateStr)){
-        cerr << "\nERROR: введена некорректная дата\n";
+        cerr << "\nError: введена некорректная дата\n";
         system("pause");
         exit(1);   
     }
@@ -136,7 +136,11 @@ void eventList::print(){
     printTableHead();           //печать головы таблицы
     event* curr = head;
     do{
-        printEventRow(curr);    //печать элемента в строке таблицы
+        Error* err = printEventRow(curr);    //печать элемента в строке таблицы
+        if(err){
+            cout << err->message;
+            return;
+        }
         curr = curr->next;
     }
     while(curr != head);
@@ -225,60 +229,90 @@ event* eventList::getEventFromConsole(){
     int num;
     string filter;
     do{
-        getline(cin, filter);
+        // getline(cin, filter);
        
-        cout << "Операция: ";
-        getline(cin, filter);
+        while(true){
+            cout << "Операция: ";
+            getline(cin, filter);
+            if(filter.length() == 1 && filter[0] > 47 && filter[0] < 58 || filter.length() == 2 && filter[0] == 49 && filter[1] == 48){
+                break;
+            }
+            cerr << "Некорректный ввод. Введите заново.\n";
+        }
+        
         num = atoi(filter.c_str());
 
         switch (num)
         {
-        case 0:
-            cout << "ID: ";
-            getline(cin, filter);
+        case 0:         
+            while(true){
+                cout << "ID: ";
+                getline(cin, filter);
+                if(isDigitCorrect(filter)) break;
+                cout << "Некорректный ввод. Введите заново.\n";
+            }            
             newEvent->id = atoi(filter.c_str());
             break;
         case 1: 
-            cout << "Type: ";
-            getline(cin, filter);
-            if(!filter.compare("Dep")){
-                newEvent->type = 1;
-            } else if(!filter.compare("Arr")) newEvent->type = 0;
+            while(true){
+                cout << "Type: ";
+                getline(cin, filter);
+                if(!filter.compare("Dep")){
+                    newEvent->type = 1;
+                    break;
+                } else if(!filter.compare("Arr")){
+                    newEvent->type = 0;
+                    break;
+                }
+                cout << "Некорректный ввод. Введите заново.\n";
+            }
             break;
         case 2:
-            cout << "Airport ID: ";
-            getline(cin, filter);
+            airports.print();
+            while(true){
+                cout << "Airport ID: ";
+                getline(cin, filter);
+                if(isDigitCorrect(filter)) break;
+                cerr << "Некорректный ввод. Введите заново.\n";
+            }   
             newEvent->airportId = atoi(filter.c_str());
             break;
         case 3:
-            cout << "Дата начала: ";
-            getline(cin, filter);
-            if(!isDateCorrect(filter)){
-                cerr << "\nERROR: введена некорректная дата\n";
-                system("pause");
-                exit(1);   
-            }
-            newEvent->date = dateToInt(filter);
-            newEvent->dateStr = filter;
+            while(true){
+                cout << "Дата начала: ";
+                getline(cin, filter);
+                if(!isDateCorrect(filter)){
+                    cerr << "\nError: введена некорректная дата\n";
+                    continue;
+                }
+                newEvent->date = dateToInt(filter);
+                newEvent->dateStr = filter;
 
-            cout << "Дата конца: "; 
-            getline(cin, filter);
-            newEvent->dateEnd = dateToInt(filter);
-            if(!isDateCorrect(filter) || newEvent->date > newEvent->dateEnd){
-                cerr << "\nERROR: введена некорректная дата\n";
-                system("pause");
-                exit(1);   
+                cout << "Дата конца: "; 
+                getline(cin, filter);
+                newEvent->dateEnd = dateToInt(filter);
+                if(!isDateCorrect(filter) || newEvent->date > newEvent->dateEnd){
+                    cerr << "\nError: введена некорректная дата\n";
+                    continue;   
+                } else{
+                    newEvent->dateStrEnd = filter;
+                    break;
+                }
             }
-            newEvent->dateStrEnd = filter;
             break;
         case 4:
             cout << "Бортовой номер: ";
             newEvent->flightNumber = filter;
             break;
         case 5:
-            cout << "ID марки самолета: ";
-            getline(cin, filter);
-            newEvent->planeBrandId = atoi(filter.c_str());;
+            planes.print();
+            while(true){
+                cout << "ID марки самолета: ";
+                getline(cin, filter);
+                if(isDigitCorrect(filter)) break;
+                cerr << "Некорректный ввод. Введите заново.\n";
+            } 
+            newEvent->planeBrandId = atoi(filter.c_str());
             break;
         case 6:
             cout << "Дистанция: ";
@@ -286,18 +320,30 @@ event* eventList::getEventFromConsole(){
             newEvent->distance = filter;
             break;
         case 7:
-            cout << "Пассажиры: ";
-            getline(cin, filter);
+            while(true){
+                cout << "Пассажиры: ";
+                getline(cin, filter);
+                if(isDigitCorrect(filter)) break;
+                cerr << "Некорректный ввод. Введите заново.\n";
+            }
             newEvent->onBoard = atoi(filter.c_str());
             break;
         case 8:
-            cout << "Проданных билетов: ";
-            getline(cin, filter);
+            while(true){
+                cout << "Проданных билетов: ";
+                getline(cin, filter);
+                if(isDigitCorrect(filter)) break;
+                cerr << "Некорректный ввод. Введите заново.\n";
+            }
             newEvent->sold = atoi(filter.c_str());
             break;
         case 9:
-            cout << "Цена билета: ";
-            getline(cin, filter);
+            while(true){
+                cout << "Цена билета: ";
+                getline(cin, filter);
+                if(isDigitCorrect(filter)) break;
+                cerr << "Некорректный ввод. Введите заново.\n";
+            }
             newEvent->ticketPrice = atof(filter.c_str());
             break;
         default:
@@ -342,10 +388,13 @@ void eventList::select(event* Event){
                 printTableHead();
                 tableHead = true;
             }
-            printEventRow(curr);
+            Error* err = printEventRow(curr);    //печать элемента в строке таблицы
+            if(err){
+                cout << err->message;
+                return;
+            }
             equalsCount++;
         }
-
         curr = curr->next;
     }
     while(curr != head);  
@@ -373,7 +422,12 @@ void eventList::remove(event* Event){
                 printTableHead();
                 tableHead = true;
             }
-            printEventRow(curr);
+            
+            Error* err = printEventRow(curr);    //печать элемента в строке таблицы
+            if(err){
+                cout << err->message;
+                return;
+            }
             equalsCount++;
 
             curr->prev->next = curr->next;
@@ -463,22 +517,34 @@ void eventList::printTableHead(){
 }
 
 //печать события в строке таблицы
-void eventList::printEventRow(event* curr){
+Error* eventList::printEventRow(event* curr){
     int spaces[] = {2, 4, 17, 10, 12, 15, 8, 7, 4, 11};
-    string etype;
-    
-    if(curr->type){
+    string etype = "-";
+    Error* err = new Error;
+
+    if(curr->type == 1){
         etype = "Dep";
-    } else etype = "Arr";
+    } else if (curr->type == 0) etype = "Arr";
     
     string airportName = "-";
-    if(curr->airportId > -1){
-        airportName = airports.getData(curr->airportId);
+    if(curr->airportId > -1){   
+        airport* airport = airports.getAirport(curr->airportId);
+        if(!airport){
+            err->code = 1;
+            err->message = "ошибка печати события\n";
+            return err;
+        }
+        airportName = airport->name;
     }
 
     string planeName = "-";
     if(curr->planeBrandId > -1){
         plane *plane = planes.getPlane(curr->planeBrandId);
+        if(!plane){
+            err->code = 1;
+            err->message = "ошибка печати события\n";
+            return err;
+        }
         planeName = plane->name;
     }
     
@@ -491,6 +557,8 @@ void eventList::printEventRow(event* curr){
         cout << "+";
     }
     cout << endl;
+
+    return nullptr;
 }
 
 //дата string(дд.мм.гг)->int        
@@ -499,6 +567,13 @@ int eventList::dateToInt(string date){
     int months = (date[3] - 48) * 10 + date[4] - 48;
     int years = (date[6] - 48) * 10 + date[7] - 48;
     return days + 30*months + 365*years;
+}
+
+bool eventList::isDigitCorrect(string idStr){
+    for(int i = 0; i < idStr.length(); i++){
+        if(idStr[i] < 48 || idStr[i] > 57)  return false;
+    }
+    return true;
 }
 
 //проверка введенной даты на корректность (дд.мм.гг)
@@ -518,5 +593,243 @@ bool eventList::isDateCorrect(string date){
     if(days < 1 || days > 31 || months < 1 || months > 12 || years < 0) return false;   //корректность дня, месяца и года
 
     return true;
+}
+
+void eventList::queries(){  
+    event* defaultEvent = new event;
+    defaultEvent->id = -1;
+    defaultEvent->type = -1;
+    defaultEvent->airportId = -1;
+    defaultEvent->date = -1;
+    defaultEvent->dateEnd = -1;
+    defaultEvent->flightNumber = "-";
+    defaultEvent->planeBrandId = -1;
+    defaultEvent->distance = "-";
+    defaultEvent->onBoard = -1;
+    defaultEvent->sold = -1;
+    defaultEvent->ticketPrice = -1;
+
+    //5 запросов
+    cout << "\n1. Прилеты/вылеты из/в конкретного аэропорта\n";
+    cout << "2. Прилеты/вылеты из/в конкретного аэропорта в заданное время\n";
+    cout << "3. Прилеты/вылеты самолетов заданной марки в заданное время\n";
+    cout << "4. Прилеты в конкретный аэропорт в заданное время\n";
+    cout << "5. Вылеты из конкретного аэропорта в заданное время\n";
+    cout << "6. Прилеты/вылеты заданной дальности\n";
+    string command, filter;
+    while(true){
+        cout << "Операция: ";
+        getline(cin, command);
+        if(command.length() == 1 && command[0] > 47 && command[0] < 58){
+            break;
+        }
+        cerr << "Некорректный ввод. Введите заново.\n";
+    }
+    int com = atoi(command.c_str()), id;
+
+    switch(com){
+        case 1:
+            airports.print();
+            while(true){
+                cout << "Airport ID: ";
+                getline(cin, filter);
+
+                if(!isDigitCorrect(filter)){
+                    cerr << "Некорректный ввод. Введите заново.\n";
+                    continue;
+                } else if(atoi(filter.c_str()) < 0 || atoi(filter.c_str()) >= airports.length()){
+                    cerr << "Такого ID не существует. Введите заново.\n";
+                    continue;
+                }
+                break;
+            }   
+            defaultEvent->airportId = atoi(filter.c_str());
+
+            cout << "\nРЕЗУЛЬТАТ: Прилеты/вылеты из/в "<< airports.getAirport(defaultEvent->airportId)->name << ":\n";
+            break;
+        case 2:
+            airports.print();
+            while(true){
+                cout << "Airport ID: ";
+                getline(cin, filter);
+
+                if(!isDigitCorrect(filter)){
+                    cerr << "Некорректный ввод. Введите заново.\n";
+                    continue;
+                } else if(atoi(filter.c_str()) < 0 || atoi(filter.c_str()) >= airports.length()){
+                    cerr << "Такого ID не существует. Введите заново.\n";
+                    continue;
+                }
+                break;
+            }   
+            defaultEvent->airportId = atoi(filter.c_str());
+
+            while(true){
+                cout << "Дата начала: ";
+                getline(cin, filter);
+                if(!isDateCorrect(filter)){
+                    cerr << "\nError: введена некорректная дата\n";
+                    continue;
+                }
+                defaultEvent->date = dateToInt(filter);
+                defaultEvent->dateStr = filter;
+
+                cout << "Дата конца: "; 
+                getline(cin, filter);
+                defaultEvent->dateEnd = dateToInt(filter);
+                if(!isDateCorrect(filter) || defaultEvent->date > defaultEvent->dateEnd){
+                    cerr << "\nError: введена некорректная дата\n";
+                    continue;   
+                } else{
+                    defaultEvent->dateStrEnd = filter;
+                    break;
+                }
+            }
+
+            cout << "\nРЕЗУЛЬТАТ: Прилеты/вылеты из/в " << airports.getAirport(defaultEvent->airportId)->name;
+            cout << " в промежутке с " << defaultEvent->dateStr << " по " << defaultEvent->dateStrEnd << ":\n";
+            break;
+        case 3:
+            planes.print();
+            while(true){
+               cout << "ID марки самолета: ";
+                getline(cin, filter);
+
+                if(!isDigitCorrect(filter)){
+                    cerr << "Некорректный ввод. Введите заново.\n";
+                    continue;
+                } else if(atoi(filter.c_str()) < 0 || atoi(filter.c_str()) >= planes.length()){
+                    cerr << "Такого ID не существует. Введите заново.\n";
+                    continue;
+                }
+                break;
+            }   
+            defaultEvent->planeBrandId = atoi(filter.c_str());
+
+            while(true){
+                cout << "Дата начала: ";
+                getline(cin, filter);
+                if(!isDateCorrect(filter)){
+                    cerr << "\nError: введена некорректная дата\n";
+                    continue;
+                }
+                defaultEvent->date = dateToInt(filter);
+                defaultEvent->dateStr = filter;
+
+                cout << "Дата конца: "; 
+                getline(cin, filter);
+                defaultEvent->dateEnd = dateToInt(filter);
+                if(!isDateCorrect(filter) || defaultEvent->date > defaultEvent->dateEnd){
+                    cerr << "\nError: введена некорректная дата\n";
+                    continue;   
+                } else{
+                    defaultEvent->dateStrEnd = filter;
+                    break;
+                }
+            }
+            
+            cout << "\nРЕЗУЛЬТАТ: Прилеты/вылеты " << planes.getPlane(defaultEvent->planeBrandId)->name;
+            cout << " в промежутке с " << defaultEvent->dateStr << " по " << defaultEvent->dateStrEnd << ":\n";
+            break;   
+        case 4:
+            defaultEvent->type = 0;
+
+            airports.print();
+            while(true){
+                cout << "Airport ID: ";
+                getline(cin, filter);
+
+                if(!isDigitCorrect(filter)){
+                    cerr << "Некорректный ввод. Введите заново.\n";
+                    continue;
+                } else if(atoi(filter.c_str()) < 0 || atoi(filter.c_str()) >= airports.length()){
+                    cerr << "Такого ID не существует. Введите заново.\n";
+                    continue;
+                }
+                break;
+            }   
+            defaultEvent->airportId = atoi(filter.c_str());
+
+            while(true){
+                cout << "Дата начала: ";
+                getline(cin, filter);
+                if(!isDateCorrect(filter)){
+                    cerr << "\nError: введена некорректная дата\n";
+                    continue;
+                }
+                defaultEvent->date = dateToInt(filter);
+                defaultEvent->dateStr = filter;
+
+                cout << "Дата конца: "; 
+                getline(cin, filter);
+                defaultEvent->dateEnd = dateToInt(filter);
+                if(!isDateCorrect(filter) || defaultEvent->date > defaultEvent->dateEnd){
+                    cerr << "\nError: введена некорректная дата\n";
+                    continue;   
+                } else{
+                    defaultEvent->dateStrEnd = filter;
+                    break;
+                }
+            }
+            
+            cout << "\nРЕЗУЛЬТАТ: Прилеты в " << airports.getAirport(defaultEvent->airportId)->name;
+            cout << " в промежутке с " << defaultEvent->dateStr << " по " << defaultEvent->dateStrEnd << ":\n";
+            break;
+        case 5:
+            defaultEvent->type = 1;
+
+            airports.print();
+            while(true){
+                cout << "Airport ID: ";
+                getline(cin, filter);
+
+                if(!isDigitCorrect(filter)){
+                    cerr << "Некорректный ввод. Введите заново.\n";
+                    continue;
+                } else if(atoi(filter.c_str()) < 0 || atoi(filter.c_str()) >= airports.length()){
+                    cerr << "Такого ID не существует. Введите заново.\n";
+                    continue;
+                }
+                break;
+            }   
+            defaultEvent->airportId = atoi(filter.c_str());
+
+            while(true){
+                cout << "Дата начала: ";
+                getline(cin, filter);
+                if(!isDateCorrect(filter)){
+                    cerr << "\nError: введена некорректная дата\n";
+                    continue;
+                }
+                defaultEvent->date = dateToInt(filter);
+                defaultEvent->dateStr = filter;
+
+                cout << "Дата конца: "; 
+                getline(cin, filter);
+                defaultEvent->dateEnd = dateToInt(filter);
+                if(!isDateCorrect(filter) || defaultEvent->date > defaultEvent->dateEnd){
+                    cerr << "\nError: введена некорректная дата\n";
+                    continue;   
+                } else{
+                    defaultEvent->dateStrEnd = filter;
+                    break;
+                }
+            }
+
+            cout << "\nРЕЗУЛЬТАТ: Вылеты из " << airports.getAirport(defaultEvent->airportId)->name;
+            cout << " в промежутке с " << defaultEvent->dateStr << " по " << defaultEvent->dateStrEnd << ":\n";
+            break;
+        case 6:
+            cout << "Дистанция: ";
+            getline(cin, filter);
+            defaultEvent->distance = filter;
+            
+            cout << "\nРЕЗУЛЬТАТ: Прилеты/вылеты дальности " << defaultEvent->distance << ":\n";
+            break;
+        default:
+            break;
+    }
+
+    select(defaultEvent);
 }
 

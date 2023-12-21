@@ -26,7 +26,8 @@ void planeList::init(const char *path){
 
     string data;
     int capacity;
-    while(!file.eof()){
+    while(!file.eof())
+    {
         int index, capacity;
         file >> index;
         getline(file, data);
@@ -91,7 +92,7 @@ int planeList::remove(string name){
 //печать списка
 void planeList::print(){
     
-    cout << "planesList:\n";
+    cout << "\nplanesList:\n";
     plane* curr = head;
     do{
         cout << curr->id << " " << curr->name << " " << curr->capacity << endl;
@@ -115,7 +116,7 @@ bool planeList::empty(){
 plane* planeList::getPlane(int id){
     if(id < 0 || id >= count){
         cerr << "в списке нет элемента с таким id " << id;
-        exit(1); 
+        return nullptr;
     }
 
     plane* curr = head;
@@ -126,5 +127,5 @@ plane* planeList::getPlane(int id){
     while(curr != head);
 
     cerr << "в списке нет элемента с таким id " << id;
-    exit(1); 
+    return nullptr;
 }

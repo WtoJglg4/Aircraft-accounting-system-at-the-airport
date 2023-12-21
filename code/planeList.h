@@ -37,7 +37,7 @@ class planeList{
         int length();                                       //длина списка
         bool empty();                                       //проверка на пустоту
         void print();                                       //печать списка
-        plane* getPlane(int id);                            //получение названия по id
+        plane* getPlane(int id);                  //получение названия по id
 };
 
 #endif

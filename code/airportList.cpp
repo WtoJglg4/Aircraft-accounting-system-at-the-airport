@@ -100,7 +100,7 @@ bool airportList::empty(){
 //печать списка
 void airportList::print(){
     
-    cout << "airportsList:\n";
+    cout << "\nairportsList:\n";
     airport* curr = head;
     do{
         cout << curr->id << " " << curr->name << endl;
@@ -111,19 +111,19 @@ void airportList::print(){
 }
 
 //получение названия по id
-string airportList::getData(int id){
+airport* airportList::getAirport(int id){
     if(id < 0 || id >= count){
         cerr << "в списке нет элемента с таким id " << id;
-        exit(1); 
+        return nullptr;
     }
 
     airport* curr = head;
     do{
-        if(curr->id == id) return curr->name;
+        if(curr->id == id) return curr;
         curr = curr->next;
     }
     while(curr != head);
 
     cerr << "в списке нет элемента с таким id " << id;
-    exit(1); 
+    return nullptr;
 }

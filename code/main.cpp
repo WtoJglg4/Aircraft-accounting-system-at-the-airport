@@ -25,6 +25,10 @@ const char *eventsPath = "input/input.txt", *planesPath = "input/planes.txt", *a
 
 //g++ main.cpp eventlist.cpp planelist.cpp airportlist.cpp -o output.exe
 int main(){
+
+    cout << "СИСТЕМА УЧЕТА ВОЗДУШНЫХ СУДОВ В АЭРОПОРТУ\n\n\n";
+
+
     //инициализация списка марок самолетов и списка аэропортов
     planeList planes;
     airportList airports;
@@ -33,16 +37,24 @@ int main(){
 
     //инициализация списка взлетов/посадок
     eventList events(eventsPath, airports, planes);
+
     
-    int command;
+    string command;
     while(true){
         cout << "\n----------MENU----------\n";
         cout << "1. Добавление события\n2. Удаление\n3. Поиск\n4. Печать списка\n5. Перемещение в прямом направлении\n6. Перемещение в прямом направлении\n7. Выход\n\n";
-        cout << "Операция: ";
-        cin >> command;
+        while(true){
+            cout << "Операция: ";
+            getline(cin, command);
+            if(command.length() == 1 && command[0] > 47 && command[0] < 58){
+                break;
+            }
+            cerr << "Некорректный ввод. Введите заново.\n";
+        }        
+        int com = atoi(command.c_str());
         event* custom;
         int eventId, steps;
-        switch (command){
+        switch (com){
             case 1:
                 cout << "\nВведите событие для добавления:\n";
                 custom = events.getEventFromConsole();
@@ -54,9 +66,28 @@ int main(){
                 events.remove(custom);
                 break;
             case 3:
-                // cout << "\nВведите запрос:\n";
-                custom = events.getEventFromConsole();
-                events.select(custom);
+                cout << "\n1. Воспользоваться готовыми запросами\n2. Ввести вручную\n";
+                while(true){
+                    cout << "Операция: ";
+                    getline(cin, command);
+                    if(command.length() == 1 && (command[0] == 49 || command[0] == 50)){
+                        break;
+                    }
+                    cerr << "Некорректный ввод. Введите заново.\n";
+                }        
+                 com = atoi(command.c_str());
+                switch (com){
+                    case 1:
+                        events.queries();
+                        break;
+                    case 2:
+                        cout << "\nВведите запрос:\n";
+                        custom = events.getEventFromConsole();
+                        events.select(custom);
+                        break;
+                    deafault:
+                        break;
+                }
                 break;
             case 4:
                 events.print();

@@ -36,7 +36,7 @@ class airportList{
         int length();                           //длина списка
         bool empty();                           //проверка на пустоту
         void print();                           //печать списка
-        string getData(int id);                 //получение названия по id
+        airport* getAirport(int id);            //получение названия по id
 };
 
 #endif
