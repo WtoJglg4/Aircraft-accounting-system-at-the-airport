@@ -27,6 +27,8 @@ Error* testFile(const char *path);
 
 //g++ main.cpp eventlist.cpp planelist.cpp airportlist.cpp -o output.exe
 int main(){
+    system("color F0");
+
     //проверка на существование и непустоту файлов
     Error* err;
     const char *files[] = {eventsPath, planesPath, airoportsPath};
